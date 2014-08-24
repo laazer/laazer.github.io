@@ -1131,3 +1131,22 @@
 		{
 			background-color: #e8edec;
 		}
+/*********************************************
+Pie Chart
+*********************************************/
+/*
+#skillz .chart {
+    height: 110px;
+    width: 110px;
+    margin: 5px;
+    line-height: 110px;
+    text-align: center;
+    float: left;
+}
+
+#skillz .chart canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+}*/
