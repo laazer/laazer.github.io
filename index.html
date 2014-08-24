@@ -11,6 +11,7 @@
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-panels.min.js"></script>
 		<script src="js/init.js"></script>
+        <script src="js/replace.js"></script>
 		<noscript>
 			<link rel="stylesheet" href="css/skel-noscript.css" />
 			<link rel="stylesheet" href="css/style.css" />
@@ -18,6 +19,7 @@
 		</noscript>
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie8.css" /><![endif]-->
+        <link rel="shortcut icon" href="images/lzr2-favicon.ico" >
 	</head>
 	<body>
 
@@ -30,7 +32,7 @@
 						<div id="logo">
 							<span class="image avatar48"><img src="images/lzr2.png" alt="" /></span>
 							<h1 id="title">Laazer</h1>
-							<span class="byline">Software Engineer</span>
+							<span class="byline">Software Developer</span>
 						</div>
 
 					<!-- Nav -->
@@ -52,6 +54,7 @@
 								<li><a href="#top" id="top-link" class="skel-panels-ignoreHref"><span class="fa fa-home">Intro</span></a></li>
 								<li><a href="#portfolio" id="portfolio-link" class="skel-panels-ignoreHref"><span class="fa fa-th">Portfolio</span></a></li>
 								<li><a href="#about" id="about-link" class="skel-panels-ignoreHref"><span class="fa fa-user">About Me</span></a></li>
+                                <li><a href="#skillz" id="my-skills" class="skel-panels-ignoreHref"><span class="fa fa-code">My Skills</span></a></li>
 								<li><a href="#contact" id="contact-link" class="skel-panels-ignoreHref"><span class="fa fa-envelope">Contact</span></a></li>
 							</ul>
 						</nav>
@@ -63,7 +66,7 @@
 					<!-- Social Icons -->
 						<ul class="icons">
 							<li><a href="https://twitter.com/laazer_dev" class="fa fa-twitter solo"><span>Twitter</span></a></li>
-							<li><a href="#" class="fa fa-facebook solo"><span>Facebook</span></a></li>
+							<li><a href="#" class="fa fa-facebook solo" style="display:none;"><span>Facebook</span></a></li>
 							<li><a href="https://github.com/laazer" class="fa fa-github solo"><span>Github</span></a></li>
 							<li><a href="#" class="fa fa-envelope solo"><span>Email</span></a></li>
 						</ul>
@@ -79,7 +82,7 @@
 					<section id="top" class="one">
 						<div class="container">
 
-							<a href="http://ineedchemicalx.deviantart.com/art/Moonscape-381829905" class="image featured"><img src="images/pic01.jpg" alt="" /></a>
+							<a href="#" class="image featured"><img src="images/pic01.jpg" alt="" /></a>
 
 							<header>
 								This site is currently under construction.
@@ -110,7 +113,7 @@
 							<div class="row">
 								<div class="4u">
 									<article class="item">
-										<a href="https://laazer.github.io/sunshine" class="image full"><img src="http://www.webweaver.nu/clipart/img/nature/planets/sun-wearing-sunglasses.png" alt="" /></a>
+										<a href="https://laazer.github.io/sunshine" class="image full"><img src="images/sunshineImage.png" alt="" /></a>
 										<header>
 											<h3>Sunshine</h3>
 										</header>
@@ -118,7 +121,7 @@
 									<article class="item">
 										<a href="#" class="image full"><img src="images/pic03.jpg" alt="" /></a>
 										<header>
-											<h3>Rhoncus Semper</h3>
+											<h3>Comming Soon</h3>
 										</header>
 									</article>
 								</div>
@@ -126,13 +129,13 @@
 									<article class="item">
 										<a href="#" class="image full"><img src="images/pic04.jpg" alt="" /></a>
 										<header>
-											<h3>Magna Nullam</h3>
+											<h3>Comming Soon</h3>
 										</header>
 									</article>
 									<article class="item">
 										<a href="#" class="image full"><img src="images/pic05.jpg" alt="" /></a>
 										<header>
-											<h3>Natoque Vitae</h3>
+											<h3>Comming Soon</h3>
 										</header>
 									</article>
 								</div>
@@ -140,11 +143,11 @@
 									<article class="item">
 										<a href="#" class="image full"><img src="images/pic06.jpg" alt="" /></a>
 										<header>
-											<h3>Dolor Penatibus</h3>
+											<h3>Comming Soon</h3>
 										</header>
 									</article>
 									<article class="item">
-										<a href="https://laazer.github.io/laazer/platapi" class="image full"><img src="http://fc04.deviantart.net/fs71/f/2013/317/8/e/division_5_platinum_tier_league_of_legends_emblem_by_narishm-d6u3akq.png" alt="" /></a>
+										<a href="https://laazer.github.io/laazer/platapi" class="image full"><img src="images/platImage.png" alt="" /></a>
 										<header>
 											<h3>PlatAPI</h3>
 										</header>
@@ -160,23 +163,29 @@
 						<div class="container">
 
 							<header>
-								<h2>About Me</h2>
+								<h2 id="about-me-l">About Me</h2>
 							</header>
-
-							<a href="http://ineedchemicalx.deviantart.com/art/Pasadena-357650036" class="image featured"><img src="images/pic08.jpg" alt="" /></a>
-							
+<!--							<a href="#" class="image featured"><img src="images/pic08.jpg" alt="" /></a>-->
 							<p>Tincidunt eu elit diam magnis pretium accumsan etiam id urna. Ridiculus 
 							ultricies curae quis et rhoncus velit. Lobortis elementum aliquet nec vitae 
 							laoreet eget cubilia quam non etiam odio tincidunt montes. Elementum sem 
 							parturient nulla quam placerat viverra mauris non cum elit tempus ullamcorper 
 							dolor. Libero rutrum ut lacinia donec curae mus vel quisque sociis nec 
 							ornare iaculis.</p>
-
+                            <a href="#" class="button submit">Resume</a>
 						</div>
 					</section>
-			
+                
+			    <!-- Skills -->
+                <section id=skillz class="four">
+                    <header>
+                        <h2 id="skills">My Skills</h2>
+                    </header>
+                    
+                </section>
+                
 				<!-- Contact -->
-					<section id="contact" class="four">
+					<section id="contact" class="five">
 						<div class="container">
 
 							<header>
