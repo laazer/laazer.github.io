@@ -13,21 +13,22 @@ body {
     background-image: url("images/web/ie.png");
 }
 
-.ff-holder .ff-image {   
+
+.image-holder .ff-image {   
     float: left;
     height: 100px; width: 100px;
     margin-left: 100px;
     background-image: url("images/web/ff.png");
 }
 
-.chrome-holder .chrome-image {
+.image-holder .chrome-image {
     float: left;
     height: 100px; width: 100px;
     margin-left: 105px;
     background-image: url("images/web/Chrome.png");
 }
 
-.opera-holder .opera-image {
+.image-holder .opera-image {
     float: left;
     height: 100px; width: 100px;
     margin-left: 105px;
