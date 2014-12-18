@@ -22,7 +22,7 @@ var me = {
 
 var lzr = {
     name: "laazer",
-    email: "",
+    email: "laazer.dev@gmail.com",
     twiiter: "",
     facebook: "",
     img: "",

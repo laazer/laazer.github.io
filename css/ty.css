@@ -1,4 +1,15 @@
-/* CSS3 keyframes */
+body {
+    height: 500px;
+    width: 500px;
+}
+
+.container {
+    margin-left: 50%;
+    margin-right: 50%;
+    height: 100%;
+    width: 100%;
+}
+
 @-webkit-keyframes ckw {
     0% {
         -moz-transform: rotate(0deg);
@@ -45,7 +56,6 @@
     float: none;
     position: absolute;
     text-align: center;
-
     -moz-animation-timing-function: linear;
     -moz-animation-iteration-count: infinite;
     -moz-animation-direction: normal;
@@ -60,8 +70,9 @@
     -webkit-animation-play-state: running;
     -webkit-animation-fill-mode: forwards;
 }
+
 #gear1 {
-    background: url('/images/ty/g1.png') no-repeat 0 0;
+    background: url("images/ty/g1.png") no-repeat 0 0;
     height: 85px;
     left: 31px;
     top: 45px;
@@ -73,8 +84,9 @@
     -webkit-animation-name: ckw;
     -webkit-animation-duration: 10s;
 }
+
 #gear2 {
-    background: url('/images/ty/g2.png') no-repeat 0 0;
+    background: url("images/ty/g2.png") no-repeat 0 0;
     height: 125px;
     left: 105px;
     top: 10px;
@@ -86,8 +98,9 @@
     -webkit-animation-name: cckw;
     -webkit-animation-duration: 16.84s;
 }
+
 #gear3 {
-    background: url('/images/ty/g3.png') no-repeat 0 0;
+    background: url("images/ty/g3.png") no-repeat 0 0;
     height: 103px;
     left: 149px;
     top: 118px;
@@ -99,8 +112,9 @@
     -webkit-animation-name: ckw;
     -webkit-animation-duration: 13.5s;
 }
+
 #gear4 {
-    background: url('/images/ty/g4.png') no-repeat 0 0;
+    background: url("images/ty/g4.png") no-repeat 0 0;
     height: 144px;
     left: 46px;
     top: 173px;
@@ -112,8 +126,9 @@
     -webkit-animation-name: cckw;
     -webkit-animation-duration: 20.2s;
 }
+
 #gear5 {
-    background: url('/images/ty/g1.png') no-repeat 0 0;
+    background: url("images/ty/g1.png") no-repeat 0 0;
     height: 85px;
     left: 127px;
     top: 292px;
@@ -125,8 +140,9 @@
     -webkit-animation-name: ckw;
     -webkit-animation-duration: 10s;
 }
+
 #gear6 {
-    background: url('/images/ty/g2.png') no-repeat 0 0;
+    background: url("images/ty/g2.png") no-repeat 0 0;
     height: 125px;
     left: 200px;
     top: 283px;
@@ -138,8 +154,9 @@
     -webkit-animation-name: cckw;
     -webkit-animation-duration: 16.84s;
 }
+
 #gear7 {
-    background: url('/images/ty/g3.png') no-repeat 0 0;
+    background: url("images/ty/g3.png") no-repeat 0 0;
     height: 103px;
     left: 277px;
     top: 217px;
@@ -149,5 +166,19 @@
     -moz-animation-duration: 13.5s;
 
     -webkit-animation-name: ckw;
+    -webkit-animation-duration: 13.5s;
+}
+
+#gear8 {
+    background: url("images/ty/g4.png") no-repeat 0 0;
+    height: 144px;
+    left: 370px;
+    top: 220px;
+    width: 144px;
+
+    -moz-animation-name: cckw;
+    -moz-animation-duration: 13.5s;
+
+    -webkit-animation-name: cckw;
     -webkit-animation-duration: 13.5s;
 }
