@@ -188,7 +188,6 @@ body {
     left: 277px;
     top: 217px;
     width: 103px;
-
     -moz-animation-name: ckw;
     -moz-animation-duration: 13.5s;
 
@@ -202,10 +201,32 @@ body {
     left: 370px;
     top: 220px;
     width: 144px;
-
     -moz-animation-name: cckw;
     -moz-animation-duration: 13.5s;
+    -webkit-animation-name: cckw;
+    -webkit-animation-duration: 13.5s;
+}
 
+#gear9 {
+    background: url("images/ty/g2.png") no-repeat 0 0;
+    height: 125px;
+    left: 500px;
+    top: 270px;
+    width: 125px;
+    -moz-animation-name: ckw;
+    -moz-animation-duration: 13.5s;
+    -webkit-animation-name: ckw;
+    -webkit-animation-duration: 13.5s;
+}
+
+#gear10 {
+    background: url("images/ty/g3.png") no-repeat 0 0;
+    height: 103px;
+    left: 590px;
+    top: 220px;
+    width: 103px;
+    -moz-animation-name: cckw;
+    -moz-animation-duration: 13.5s;
     -webkit-animation-name: cckw;
     -webkit-animation-duration: 13.5s;
 }
