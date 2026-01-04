@@ -141,11 +141,42 @@ function updateTotal(){
 async function showImage(n){
   const cardImage = document.getElementById('cardImage');
   const imgHint = document.getElementById('imgHint');
-  const r=await fetch(`https://api.scryfall.com/cards/named?exact=${encodeURIComponent(n)}`);
-  const d=await r.json();
-  cardImage.src=d.image_uris.normal;
-  cardImage.style.display='block';
+  const imgLoading = document.getElementById('imgLoading');
+  const imgError = document.getElementById('imgError');
+  
+  // Hide all states initially
   imgHint.style.display='none';
+  cardImage.style.display='none';
+  imgError.style.display='none';
+  imgLoading.style.display='flex';
+  
+  try {
+    const r=await fetch(`https://api.scryfall.com/cards/named?exact=${encodeURIComponent(n)}`);
+    if(!r.ok) throw new Error('Card not found');
+    const d=await r.json();
+    
+    if(!d.image_uris || !d.image_uris.normal) throw new Error('No image available');
+    
+    // Set up image load handlers
+    cardImage.onload = () => {
+      imgLoading.style.display='none';
+      imgError.style.display='none';
+      cardImage.style.display='block';
+    };
+    
+    cardImage.onerror = () => {
+      imgLoading.style.display='none';
+      cardImage.style.display='none';
+      imgError.style.display='flex';
+    };
+    
+    // Start loading the image
+    cardImage.src=d.image_uris.normal;
+  } catch(e) {
+    imgLoading.style.display='none';
+    cardImage.style.display='none';
+    imgError.style.display='flex';
+  }
 }
 
 function exportCSV(){
