@@ -585,6 +585,95 @@ function exportCSV(includeBought = false){
   a.click();
 }
 
+function exportData(){
+  try {
+    const exportData = {
+      version: '1.0',
+      exportDate: new Date().toISOString(),
+      lists: state,
+      imageCache: getImageCache(),
+      columnVisibility: getColumnVisibility(),
+      purchaseCounter: purchaseCounter
+    };
+    
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `mtg-buylist-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) {
+    alert('Error exporting data: ' + e.message);
+  }
+}
+
+function importData(){
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        
+        // Validate the imported data structure
+        if (!imported.lists || typeof imported.lists !== 'object') {
+          throw new Error('Invalid backup file format');
+        }
+        
+        // Confirm import
+        const confirmMsg = `This will replace all current data. Are you sure?\n\n` +
+          `Lists to import: ${Object.keys(imported.lists).length}\n` +
+          `Current lists: ${Object.keys(state).length}`;
+        
+        if (!confirm(confirmMsg)) return;
+        
+        // Import the data
+        state = imported.lists || {};
+        if (Object.keys(state).length === 0) {
+          state['Default'] = [];
+        }
+        current = Object.keys(state)[0] || 'Default';
+        state[current] ||= [];
+        
+        // Import image cache if available
+        if (imported.imageCache && typeof imported.imageCache === 'object') {
+          saveImageCache(imported.imageCache);
+        }
+        
+        // Import column visibility if available
+        if (imported.columnVisibility && typeof imported.columnVisibility === 'object') {
+          saveColumnVisibility(imported.columnVisibility);
+        }
+        
+        // Import purchase counter if available
+        if (imported.purchaseCounter !== undefined && typeof imported.purchaseCounter === 'number') {
+          purchaseCounter = imported.purchaseCounter;
+        }
+        
+        // Save and refresh
+        save();
+        initPurchaseCounter();
+        refreshListSelect();
+        render();
+        updateTotal();
+        
+        alert('Data imported successfully!');
+      } catch(e) {
+        alert('Error importing data: ' + e.message);
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
 // Initialize purchase counter from existing bought items
 function initPurchaseCounter() {
   let maxOrder = 0;
