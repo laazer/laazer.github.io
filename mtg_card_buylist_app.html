@@ -29,16 +29,24 @@
       <button onclick="parseDeckList()">Parse</button>
       <input id="search" type="text" placeholder="Search cards" oninput="render()" />
       <button onclick="bulkDelete()">Delete Selected</button>
+      <div class="column-toggle">
+        <button onclick="document.getElementById('columnMenu').classList.toggle('hidden')">⚙️ Columns</button>
+        <div id="columnMenu" class="column-menu hidden glass">
+          <label><input type="checkbox" id="col-manaCost" onchange="toggleColumn('manaCost')" checked> Mana Cost</label>
+          <label><input type="checkbox" id="col-qty" onchange="toggleColumn('qty')" checked> Quantity</label>
+          <label><input type="checkbox" id="col-price" onchange="toggleColumn('price')" checked> USD Price</label>
+          <label><input type="checkbox" id="col-tcgplayerPrice" onchange="toggleColumn('tcgplayerPrice')" checked> TCG Price</label>
+          <label><input type="checkbox" id="col-bought" onchange="toggleColumn('bought')" checked> Bought</label>
+          <label><input type="checkbox" id="col-orderDetails" onchange="toggleColumn('orderDetails')" checked> Order Details</label>
+        </div>
+      </div>
     </div>
 
     <table>
       <thead>
-        <tr>
+        <tr id="tableHeader">
           <th><input type="checkbox" onclick="toggleAll(this)"></th>
           <th onclick="sortBy('name')">Card</th>
-          <th onclick="sortBy('qty')">Qty</th>
-          <th onclick="sortBy('price')" class="price">USD</th>
-          <th></th>
         </tr>
       </thead>
       <tbody id="cardTable"></tbody>
@@ -50,12 +58,13 @@
         <button onclick="page=Math.max(0,page-1);render()">◀</button>
         <button onclick="page++;render()">▶</button>
       </div>
-      <div><strong>Total: $<span id="total">0.00</span></strong></div>
-      <button onclick="exportCSV()">Export</button>
+      <div><strong>Cards: <span id="cardCount">0</span> | Total: $<span id="total">0.00</span></strong></div>
+      <button onclick="exportCSV(false)">Export Unbought</button>
+      <button onclick="exportCSV(true)">Export All</button>
     </div>
   </div>
 
-  <div class="glass image-panel" style="padding:16px;">
+  <div class="glass image-panel" style="padding:16px; position:relative;">
     <div id="imgHint">Hover a card<br>to preview art</div>
     <div id="imgLoading" class="img-status" style="display:none;">
       <div class="spinner"></div>
@@ -66,6 +75,7 @@
       <div>Image not found</div>
     </div>
     <img id="cardImage" />
+    <button id="flipButton" onclick="flipCardFace()" style="display:none; position:absolute; top:16px; right:16px; z-index:10;">🔄 Flip</button>
   </div>
 </div>
 

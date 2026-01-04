@@ -150,8 +150,118 @@ input.qty {
   text-align: center; 
 }
 
+.mana-cost {
+  font-family: monospace;
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .price { 
   text-align: right; 
+}
+
+tr.bought {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.purchase-order {
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-left: 8px;
+  font-weight: 600;
+}
+
+/* Column toggle menu */
+.column-toggle {
+  position: relative;
+}
+
+.column-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  padding: 12px;
+  min-width: 180px;
+  z-index: 100;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.column-menu.hidden {
+  display: none;
+}
+
+.column-menu label {
+  display: block;
+  padding: 6px 0;
+  cursor: pointer;
+  color: var(--text);
+  user-select: none;
+}
+
+.column-menu label:hover {
+  color: var(--accent);
+}
+
+.column-menu input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+/* Card name with links */
+.card-name-cell {
+  position: relative;
+}
+
+.card-name {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.card-links {
+  display: inline-flex;
+  gap: 6px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+tr:hover .card-links {
+  opacity: 1;
+}
+
+.card-links a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+}
+
+.card-links a:hover {
+  transform: scale(1.2);
+  color: var(--accent-strong);
+}
+
+.order-details {
+  width: 100%;
+  min-width: 150px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.order-details:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.1);
 }
 
 /* Layout Utilities */
