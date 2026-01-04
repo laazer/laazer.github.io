@@ -1,259 +1,176 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title>laazer</title>
-        <!--[if IE]>
-            <script type="text/javascript">
-            window.location = "http://www.laazer.github.io/ie.html";
-            </script>
-        <![endif]-->
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="description" content="" />
-		<meta name="keywords" content="" />
-		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600" rel="stylesheet" type="text/css" />
-		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
-		<script src="js/jquery.min.js"></script>
-		<script src="js/skel.min.js"></script>
-		<script src="js/skel-panels.min.js"></script>
-		<script src="js/init.js"></script>
-        <script src="js/replace.js"></script>
-		<noscript>
-			<link rel="stylesheet" href="css/skel-noscript.css" />
-			<link rel="stylesheet" href="css/style.css" />
-			<link rel="stylesheet" href="css/style-wide.css" />
-		</noscript>
-		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie9.css" /><![endif]-->
-		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie8.css" /><![endif]-->
-        <link rel="shortcut icon" href="images/lzr2-favicon.ico" >
-	</head>
-	<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laazer - Software Developer</title>
+  <meta name="description" content="Software Developer" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/glass.css">
+  <link rel="shortcut icon" href="images/lzr2-favicon.ico">
+  
+  <style>
+    /* Additional styles for landing page */
+    .hero {
+      text-align: center;
+      padding: 80px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+    
+    .section {
+      max-width: 900px;
+      margin: 0 auto 48px;
+    }
+    
+    .section h2 {
+      margin-bottom: 24px;
+      color: var(--accent);
+    }
+    
+    .project-card {
+      display: block;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.45);
+    }
+    
+    .project-card h3 {
+      margin: 0 0 8px 0;
+      color: var(--accent);
+    }
+    
+    .project-card p {
+      margin: 0;
+    }
+    
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      margin-top: 64px;
+      border-top: 1px solid var(--glass-border);
+    }
+    
+    footer p {
+      margin: 0 0 16px 0;
+      color: var(--text-muted);
+    }
+    
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+    
+    .github-link:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: var(--accent);
+    }
+    
+    @media (max-width: 768px) {
+      .hero {
+        padding: 48px 16px;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
 
-		<!-- Header -->
-			<div id="header" class="skel-panels-fixed">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="glass section-content">
+      <h1>Laazer</h1>
+      <p>Software Developer</p>
+    </div>
+  </section>
 
-				<div class="top">
+  <!-- About Section -->
+  <section class="section">
+    <div class="glass section-content">
+      <h2>About Me</h2>
+      <p>I'm a software developer passionate about building clean, efficient, and user-friendly applications. I enjoy working with modern web technologies and creating tools that solve real problems.</p>
+    </div>
+  </section>
 
-					<!-- Logo -->
-						<div id="logo">
-							<span class="image avatar48"><img src="images/lzr2.png" alt="" /></span>
-							<h1 id="title">Laazer</h1>
-							<span class="byline">Software Developer</span>
-						</div>
+  <!-- Projects Section -->
+  <section class="section">
+    <div class="glass section-content">
+      <h2>Projects</h2>
+      <a href="mtg_card_buylist_app.html" class="project-card glass">
+        <h3>🧙 MTG Buylist Builder</h3>
+        <p>A tool for building and managing Magic: The Gathering card buylists with price tracking, multiple saved lists, and bulk operations.</p>
+      </a>
+    </div>
+  </section>
 
-					<!-- Nav -->
-						<nav id="nav">
-							<!--
-							
-								Prologue's nav expects links in one of two formats:
-								
-								1. Hash link (scrolls to a different section within the page)
-								
-								   <li><a href="#foobar" id="foobar-link" class="skel-panels-ignoreHref"><span class="fa fa-whatever-icon-you-want">Foobar</span></a></li>
+  <!-- Contact Section -->
+  <section class="section">
+    <div class="glass section-content">
+      <h2>Contact</h2>
+      <div class="contact-info">
+        <p>Feel free to reach out if you'd like to connect or collaborate on a project.</p>
+      </div>
+    </div>
+  </section>
 
-								2. Standard link (sends the user to another page/site)
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Laazer. All rights reserved.</p>
+    <a href="https://github.com/laazer" class="github-link" target="_blank" rel="noopener noreferrer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+      </svg>
+      GitHub
+    </a>
+  </footer>
 
-								   <li><a href="http://foobar.tld"><span class="fa fa-whatever-icon-you-want">Foobar</span></a></li>
-							
-							-->
-							<ul>
-								<li><a href="#top" id="top-link" class="skel-panels-ignoreHref"><span class="fa fa-home">Intro</span></a></li>
-								<li><a href="#portfolio" id="portfolio-link" class="skel-panels-ignoreHref"><span class="fa fa-th">Portfolio</span></a></li>
-								<li><a href="#about" id="about-link" class="skel-panels-ignoreHref"><span class="fa fa-user">About Me</span></a></li>
-                                <li><a href="#skillz" id="skillz-link" class="skel-panels-ignoreHref"><span class="fa fa-code">My Skills</span></a></li>
-								<li><a href="#contact" id="contact-link" class="skel-panels-ignoreHref"><span class="fa fa-envelope">Contact</span></a></li>
-							</ul>
-						</nav>
-						
-				</div>
-				
-				<div class="bottom">
-
-					<!-- Social Icons -->
-						<ul class="icons">
-							<li><a href="https://twitter.com/laazer_dev" class="fa fa-twitter solo"><span>Twitter</span></a></li>
-							<li><a href="#" class="fa fa-facebook solo" style="display:none;"><span>Facebook</span></a></li>
-							<li><a href="https://github.com/laazer" class="fa fa-github solo"><span>Github</span></a></li>
-							<li><a href="#" class="fa fa-envelope solo"><span>Email</span></a></li>
-						</ul>
-				
-				</div>
-			
-			</div>
-
-		<!-- Main -->
-			<div id="main">
-			
-				<!-- Intro -->
-					<section id="top" class="one">
-						<div class="container">
-
-							<a href="#" class="image featured"><img src="images/pic01.jpg" alt="" /></a>
-
-							<header>
-								This site is currently under construction.
-							</header>
-							
-							<p>Please come back soon</p>
-
-							<footer>
-								<a href="#portfolio" class="button scrolly">Portfolio</a>
-							</footer>
-
-						</div>
-					</section>
-					
-				<!-- Portfolio -->
-					<section id="portfolio" class="two">
-						<div class="container">
-					
-							<header>
-								<h2>Portfolio</h2>
-							</header>
-							
-							<p>Some of the cool stuff I've been up to. Check it out!</p>
-						
-							<div class="row">
-								<div class="4u">
-									<article class="item">
-										<a href="https://laazer.github.io/sunshine" class="image full"><img src="images/sunshineImage.png" alt="" /></a>
-										<header>
-											<h3>Sunshine</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="#" class="image full"><img src="images/pic03.jpg" alt="" /></a>
-										<header>
-											<h3>Comming Soon</h3>
-										</header>
-									</article>
-								</div>
-								<div class="4u">
-									<article class="item">
-										<a href="https://laazer.github.io/bizzbuzz" class="image full"><img src="images/bbButton.png" alt="" /></a>
-										<header>
-											<h3>Bizz Buzz</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="#" class="image full"><img src="images/pic05.jpg" alt="" /></a>
-										<header>
-											<h3>Comming Soon</h3>
-										</header>
-									</article>
-								</div>
-								<div class="4u">
-									<article class="item">
-										<a href="#" class="image full"><img src="images/pic06.jpg" alt="" /></a>
-										<header>
-											<h3>Comming Soon</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="https://laazer.github.io/platapi" class="image full"><img src="images/platImage.png" alt="" /></a>
-										<header>
-											<h3>PlatAPI</h3>
-										</header>
-									</article>
-								</div>
-							</div>
-
-						</div>
-					</section>
-
-				<!-- About Me -->
-					<section id="about" class="three">
-						<div class="container">
-
-							<header>
-								<h2 id="about-me-l">About Me</h2>
-							</header>
-<!--							<a href="#" class="image featured"><img src="images/pic08.jpg" alt="" /></a>-->
-							<p>If you're thinking about hiring me, check out my Resume!</p>
-                            <a href="#" class="button submit">Resume</a>
-						</div>
-					</section>
-                
-			    <!-- Skills -->
-                <section id=skillz class="four">
-                	<div class="container">
-                    <header>
-                        <h2 id="skills">My Skills</h2>
-                    </header>
-                    <div class="charts">
-                        <span class="chart" id="java" data-percent="85">
-                            <span class="skill-text">Java</span>
-                        </span>
-                        <span class="chart" id="Scala" data-percent="80">
-                            <span class="skill-text">Scala</span>
-                           
-                        </span>
-                        <span class="chart" id="racket" data-percent="55">
-                            <span class="skill-text">Racket</span>
-                            
-                        </span>
-                        <span class="chart" id="python" data-percent="55">
-                            <span class="skill-text">Python</span>
-                           
-                        </span>
-                        <span class="chart" id="html" data-percent="70">
-                            <span class="skill-text">HTML, CSS, JS</span>
-                            
-                        </span>
-                        <span class="chart" id="git" data-percent="80">
-                            <span class="skill-text">Git, Mercurial</span>
-                            
-                        </span>
-                        <script src="js/jquery.easypiechart.min.js"></script>
-                        <script src="js/eatPie.js"></script>
-                        <script src="js/fontSizer.js"></script>
-                    </div>
-                    </div>
-                </section>
-                
-				<!-- Contact -->
-					<section id="contact" class="five">
-						<div class="container">
-
-							<header>
-								<h2>Contact</h2>
-							</header>
-
-							<p>If you have any questions, comments or you just want to say hi, shoot me an message.</p>
-							
-							<form method="post" action="#">
-								<div class="row half">
-									<div class="6u"><input type="text" class="text" name="name" placeholder="Name" /></div>
-									<div class="6u"><input type="text" class="text" name="email" placeholder="Email" /></div>
-								</div>
-								<div class="row half">
-									<div class="12u">
-										<textarea name="message" placeholder="Message"></textarea>
-									</div>
-								</div>
-								<div class="row">
-									<div class="12u">
-										<a href="#" class="button submit">Send Message</a>
-									</div>
-								</div>
-							</form>
-
-						</div>
-					</section>
-			
-			</div>
-
-		<!-- Footer -->
-			<div id="footer">
-				
-				<!-- Copyright -->
-					<div class="copyright">
-						<p>&copy; 2014 Laazer. All rights reserved.</p>
-						<ul class="menu">
-							<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-						</ul>
-					</div>
-				
-			</div>
-
-	</body>
+</body>
 </html>

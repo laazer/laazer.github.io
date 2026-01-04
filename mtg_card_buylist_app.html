@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MTG Buylist Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+
+<h1>🧙 MTG Buylist Builder</h1>
+<p>Multiple saved lists, search, and bulk actions.</p>
+
+<div class="top-controls glass" style="padding:12px; margin-bottom:12px;">
+  <select id="listSelect" onchange="loadList()"></select>
+  <input id="newListName" type="text" placeholder="New list name" />
+  <button onclick="createList()">New</button>
+  <button onclick="deleteList()">Delete List</button>
+</div>
+
+<div class="layout">
+  <div class="glass" style="padding:16px;">
+    <textarea id="deckList" placeholder="1 Sol Ring
+2 Forest"></textarea>
+    <div class="controls">
+      <button onclick="parseDeckList()">Parse</button>
+      <input id="search" type="text" placeholder="Search cards" oninput="render()" />
+      <button onclick="bulkDelete()">Delete Selected</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox" onclick="toggleAll(this)"></th>
+          <th onclick="sortBy('name')">Card</th>
+          <th onclick="sortBy('qty')">Qty</th>
+          <th onclick="sortBy('price')" class="price">USD</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="cardTable"></tbody>
+    </table>
+
+    <div class="controls">
+      <div class="pagination">
+        Rows <select id="pageSize" onchange="render()"><option>10</option><option>25</option><option>50</option><option>100</option><option>250</option></select>
+        <button onclick="page=Math.max(0,page-1);render()">◀</button>
+        <button onclick="page++;render()">▶</button>
+      </div>
+      <div><strong>Total: $<span id="total">0.00</span></strong></div>
+      <button onclick="exportCSV()">Export</button>
+    </div>
+  </div>
+
+  <div class="glass image-panel" style="padding:16px;">
+    <div id="imgHint">Hover a card<br>to preview art</div>
+    <img id="cardImage" />
+  </div>
+</div>
+
+<script src="js/mtg-buylist.js"></script>
+</body>
+</html>
+

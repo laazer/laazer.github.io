@@ -1,0 +1,235 @@
+/* Liquid Glass Design System */
+
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --accent: #7dd3fc;
+  --accent-strong: #38bdf8;
+  --text: #e5e7eb;
+  --text-muted: #94a3b8;
+}
+
+* { 
+  box-sizing: border-box; 
+}
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: radial-gradient(1200px at top left, #1e293b, #020617);
+  color: var(--text);
+  margin: 0; 
+  padding: 24px;
+  min-height: 100vh;
+}
+
+/* Glass Component */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 16px 0;
+  color: var(--text);
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+p {
+  margin: 0 0 16px 0;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--accent-strong);
+}
+
+/* Form Elements */
+textarea, input[type="text"], input[type="email"], input[type="number"] {
+  width: 100%; 
+  background: rgba(0,0,0,0.35); 
+  border: 1px solid var(--glass-border);
+  color: var(--text); 
+  border-radius: 10px; 
+  padding: 10px; 
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+textarea {
+  font-family: monospace;
+  resize: vertical;
+  min-height: 100px;
+}
+
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="number"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.1);
+}
+
+button, select {
+  padding: 8px 14px; 
+  border-radius: 10px; 
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #020617; 
+  font-weight: 600; 
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover, select:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(125, 211, 252, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+select {
+  background: rgba(0,0,0,0.35);
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+}
+
+select:hover {
+  background: rgba(0,0,0,0.45);
+}
+
+/* Table Styles */
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-top: 12px; 
+  font-size: 0.9rem; 
+}
+
+th, td { 
+  padding: 8px; 
+  border-bottom: 1px solid rgba(255,255,255,0.15); 
+  text-align: left;
+}
+
+th { 
+  cursor: pointer; 
+  color: #bae6fd; 
+  font-weight: 600;
+}
+
+tr:hover { 
+  background: rgba(255,255,255,0.08); 
+}
+
+input.qty { 
+  width: 60px; 
+  text-align: center; 
+}
+
+.price { 
+  text-align: right; 
+}
+
+/* Layout Utilities */
+.layout { 
+  display: grid; 
+  grid-template-columns: 1fr 320px; 
+  gap: 24px; 
+}
+
+.controls, .top-controls {
+  display: flex; 
+  gap: 8px; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.pagination { 
+  display: flex; 
+  gap: 6px; 
+  align-items: center; 
+}
+
+.image-panel img { 
+  width: 100%; 
+  border-radius: 12px; 
+  display: none; 
+}
+
+/* Section Styles */
+section {
+  margin-bottom: 48px;
+}
+
+.section-content {
+  padding: 24px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .controls, .top-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls > * {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+  }
+
+  .glass {
+    border-radius: 12px;
+  }
+
+  .section-content {
+    padding: 16px;
+  }
+}
+
