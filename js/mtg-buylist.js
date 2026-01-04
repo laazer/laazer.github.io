@@ -6,6 +6,63 @@ state[current] ||= [];
 
 let sortKey='name', sortDir=1, page=0;
 
+// Image cache management
+const IMAGE_CACHE_KEY = 'mtgImageCache';
+const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+const RETRY_INTERVAL = 60 * 60 * 1000; // Retry failed images after 1 hour
+
+function getImageCache() {
+  try {
+    return JSON.parse(localStorage.getItem(IMAGE_CACHE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function saveImageCache(cache) {
+  try {
+    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+  } catch (e) {
+    console.warn('Failed to save image cache:', e);
+  }
+}
+
+function getCachedImage(cardName) {
+  const cache = getImageCache();
+  const cached = cache[cardName];
+  if (!cached) return null;
+  
+  const now = Date.now();
+  
+  // If it's a successful cache and not expired, use it
+  if (cached.url && !cached.failed) {
+    if (now - cached.timestamp < CACHE_DURATION) {
+      return cached.url;
+    }
+  }
+  
+  // If it failed, check if we should retry
+  if (cached.failed) {
+    if (!cached.lastRetry || (now - cached.lastRetry) >= RETRY_INTERVAL) {
+      return null; // Retry this image
+    }
+    return null; // Still in retry cooldown
+  }
+  
+  return null;
+}
+
+function setCachedImage(cardName, url, failed = false) {
+  const cache = getImageCache();
+  cache[cardName] = {
+    url: failed ? null : url,
+    timestamp: Date.now(),
+    failed: failed,
+    lastRetry: failed ? Date.now() : (cache[cardName]?.lastRetry || null)
+  };
+  saveImageCache(cache);
+}
+
 function getTable() { return document.getElementById('cardTable'); }
 function getTotalEl() { return document.getElementById('total'); }
 
@@ -148,34 +205,71 @@ async function showImage(n){
   imgHint.style.display='none';
   cardImage.style.display='none';
   imgError.style.display='none';
+  
+  // Check cache first
+  const cachedUrl = getCachedImage(n);
+  if (cachedUrl) {
+    // Use cached image
+    imgLoading.style.display='flex';
+    cardImage.onload = () => {
+      imgLoading.style.display='none';
+      imgError.style.display='none';
+      cardImage.style.display='block';
+    };
+    cardImage.onerror = () => {
+      // Cache was wrong, mark as failed and show error
+      setCachedImage(n, null, true);
+      imgLoading.style.display='none';
+      cardImage.style.display='none';
+      imgError.style.display='flex';
+    };
+    cardImage.src = cachedUrl;
+    return;
+  }
+  
+  // No cache or needs retry - fetch from API
   imgLoading.style.display='flex';
   
   try {
     const r=await fetch(`https://api.scryfall.com/cards/named?exact=${encodeURIComponent(n)}`);
-    if(!r.ok) throw new Error('Card not found');
+    if(!r.ok) {
+      setCachedImage(n, null, true);
+      throw new Error('Card not found');
+    }
     const d=await r.json();
     
-    if(!d.image_uris || !d.image_uris.normal) throw new Error('No image available');
+    if(!d.image_uris || !d.image_uris.normal) {
+      setCachedImage(n, null, true);
+      throw new Error('No image available');
+    }
+    
+    const imageUrl = d.image_uris.normal;
     
     // Set up image load handlers
     cardImage.onload = () => {
       imgLoading.style.display='none';
       imgError.style.display='none';
       cardImage.style.display='block';
+      // Cache successful image
+      setCachedImage(n, imageUrl, false);
     };
     
     cardImage.onerror = () => {
       imgLoading.style.display='none';
       cardImage.style.display='none';
       imgError.style.display='flex';
+      // Cache failed image
+      setCachedImage(n, null, true);
     };
     
     // Start loading the image
-    cardImage.src=d.image_uris.normal;
+    cardImage.src = imageUrl;
   } catch(e) {
     imgLoading.style.display='none';
     cardImage.style.display='none';
     imgError.style.display='flex';
+    // Cache failed image
+    setCachedImage(n, null, true);
   }
 }
 
