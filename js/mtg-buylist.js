@@ -8,12 +8,12 @@ let sortKey='name', sortDir=1, page=0;
 let purchaseCounter = 0; // Track purchase order
 
 // Column visibility settings
-const COLUMN_KEYS = ['manaCost', 'qty', 'price', 'tcgplayerPrice', 'bought', 'orderDetails'];
+const COLUMN_KEYS = ['manaCost', 'qty', 'price', 'totalPrice', 'bought', 'orderDetails'];
 const DEFAULT_COLUMNS = {
   manaCost: true,
   qty: true,
   price: true,
-  tcgplayerPrice: true,
+  totalPrice: true,
   bought: true,
   orderDetails: true
 };
@@ -223,9 +223,6 @@ async function loadPrice(c){
     const r=await fetch(`https://api.scryfall.com/cards/named?exact=${encodeURIComponent(c.name)}`);
     const d=await r.json();
     c.price=d.prices?.usd?Number(d.prices.usd):null;
-    // TCG Player price - Scryfall doesn't provide this directly, but we can store it if available
-    // For now, we'll try to get it from prices.tcgplayer if it exists (some cards have this)
-    c.tcgplayerPrice=d.prices?.tcgplayer?Number(d.prices.tcgplayer):null;
     // Mana cost and CMC - get from first face for two-sided cards, or direct for single-sided
     if(d.card_faces && d.card_faces.length > 0) {
       c.manaCost=d.card_faces[0].mana_cost || null;
@@ -263,10 +260,10 @@ function render(){
     headerHtml += '<th onclick="sortBy(\'qty\')" class="col-qty">Qty</th>';
   }
   if(columnVisibility.price) {
-    headerHtml += '<th onclick="sortBy(\'price\')" class="price col-price">USD</th>';
+    headerHtml += '<th onclick="sortBy(\'price\')" class="price col-price">Per Card</th>';
   }
-  if(columnVisibility.tcgplayerPrice) {
-    headerHtml += '<th onclick="sortBy(\'tcgplayerPrice\')" class="price col-tcgplayerPrice">TCG</th>';
+  if(columnVisibility.totalPrice) {
+    headerHtml += '<th onclick="sortBy(\'totalPrice\')" class="price col-totalPrice">Total</th>';
   }
   if(columnVisibility.bought) {
     headerHtml += '<th class="col-bought">Bought</th>';
@@ -292,8 +289,8 @@ function render(){
       const bVal = b.cmc ?? (b.manaCost ? 999 : 0);
       return aVal > bVal ? sortDir : -sortDir;
     }
-    // Numeric comparison for prices
-    if(sortKey === 'price' || sortKey === 'tcgplayerPrice' || sortKey === 'qty') {
+    // Numeric comparison for prices and quantities
+    if(sortKey === 'price' || sortKey === 'qty') {
       return (Number(a[sortKey]) > Number(b[sortKey]) ? sortDir : -sortDir);
     }
     // String comparison for names
@@ -336,8 +333,9 @@ function render(){
     if(columnVisibility.price) {
       html += `<td class="price col-price">${c.price?c.price.toFixed(2):'—'}</td>`;
     }
-    if(columnVisibility.tcgplayerPrice) {
-      html += `<td class="price col-tcgplayerPrice">${c.tcgplayerPrice?c.tcgplayerPrice.toFixed(2):'—'}</td>`;
+    if(columnVisibility.totalPrice) {
+      const totalPrice = c.price && c.qty ? (c.price * c.qty).toFixed(2) : '—';
+      html += `<td class="price col-totalPrice">${totalPrice}</td>`;
     }
     if(columnVisibility.bought) {
       html += `<td class="col-bought">${boughtCheckbox}</td>`;
@@ -553,7 +551,7 @@ async function showImage(n){
 }
 
 function exportCSV(includeBought = false){
-  let csv='Name,Mana Cost,Qty,USD Price,TCG Player Price,Purchase Order,Order Details\n';
+  let csv='Name,Mana Cost,Qty,Per Card Price,Total Price,Purchase Order,Order Details\n';
   const cardsToExport = includeBought 
     ? state[current] 
     : state[current].filter(c => !c.bought);
@@ -574,11 +572,12 @@ function exportCSV(includeBought = false){
     const manaCost = c.manaCost ? formatManaCost(c.manaCost) : '';
     const purchaseOrder = c.bought && c.purchaseOrder ? c.purchaseOrder : '';
     const orderDetails = c.orderDetails || '';
+    const totalPrice = c.price && c.qty ? (c.price * c.qty).toFixed(2) : '';
     // Escape commas and quotes in order details for CSV
     const orderDetailsEscaped = orderDetails.includes(',') || orderDetails.includes('"') 
       ? `"${orderDetails.replace(/"/g, '""')}"` 
       : orderDetails;
-    csv+=`${c.name},${manaCost},${c.qty},${c.price??''},${c.tcgplayerPrice??''},${purchaseOrder},${orderDetailsEscaped}\n`;
+    csv+=`${c.name},${manaCost},${c.qty},${c.price??''},${totalPrice},${purchaseOrder},${orderDetailsEscaped}\n`;
   });
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
