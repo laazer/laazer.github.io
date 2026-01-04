@@ -10,122 +10,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/glass.css">
+  <link rel="stylesheet" href="css/index.css">
   <link rel="shortcut icon" href="images/lzr2-favicon.ico">
-  
-  <style>
-    /* Additional styles for landing page */
-    .hero {
-      text-align: center;
-      padding: 80px 24px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    
-    .hero h1 {
-      font-size: 3.5rem;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .hero p {
-      font-size: 1.25rem;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-    }
-    
-    .section {
-      max-width: 900px;
-      margin: 0 auto 48px;
-    }
-    
-    .section h2 {
-      margin-bottom: 24px;
-      color: var(--accent);
-    }
-    
-    .project-card {
-      display: block;
-      padding: 24px;
-      margin-bottom: 16px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 24px 48px rgba(0,0,0,0.45);
-    }
-    
-    .project-card h3 {
-      margin: 0 0 8px 0;
-      color: var(--accent);
-    }
-    
-    .project-card p {
-      margin: 0;
-    }
-    
-    .contact-info {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    footer {
-      text-align: center;
-      padding: 32px 24px;
-      margin-top: 64px;
-      border-top: 1px solid var(--glass-border);
-    }
-    
-    footer p {
-      margin: 0 0 16px 0;
-      color: var(--text-muted);
-    }
-    
-    .github-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 10px;
-      transition: all 0.2s;
-    }
-    
-    .github-link:hover {
-      background: rgba(255,255,255,0.2);
-      border-color: var(--accent);
-    }
-    
-    @media (max-width: 768px) {
-      .hero {
-        padding: 48px 16px;
-      }
-      
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-      
-      .hero p {
-        font-size: 1.1rem;
-      }
-    }
-  </style>
 </head>
 <body>
 
   <!-- Hero Section -->
   <section class="hero">
+    <img src="images/lzr2.png" alt="Laazer" class="hero-avatar">
     <div class="glass section-content">
       <h1>Laazer</h1>
       <p>Software Developer</p>
