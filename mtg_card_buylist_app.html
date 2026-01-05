@@ -56,13 +56,18 @@
 
     <div class="controls">
       <div class="pagination">
-        Rows <select id="pageSize" onchange="render()"><option>10</option><option>25</option><option>50</option><option>100</option><option>250</option></select>
+        Rows <select id="pageSize" onchange="page=0;render()"><option>10</option><option>25</option><option>50</option><option>100</option><option>250</option></select>
         <button onclick="page=Math.max(0,page-1);render()">◀</button>
+        <span id="pageInfo">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
         <button onclick="page++;render()">▶</button>
       </div>
       <div><strong>Cards: <span id="cardCount">0</span> | Total: $<span id="total">0.00</span></strong></div>
-      <button onclick="exportCSV(false)">Export Unbought</button>
-      <button onclick="exportCSV(true)">Export All</button>
+      <div class="export-buttons">
+        <button onclick="exportCSV(false)">CSV Unbought</button>
+        <button onclick="exportCSV(true)">CSV All</button>
+        <button onclick="exportForManaPool(false)" title="Export as Quantity Card Name format for Mana Pool">Mana Pool</button>
+        <button onclick="exportForTCGPlayer(false)" title="Export as Card Name | Quantity format for TCG Player">TCG Player</button>
+      </div>
     </div>
   </div>
 

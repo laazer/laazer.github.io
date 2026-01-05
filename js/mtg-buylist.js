@@ -275,10 +275,9 @@ function render(){
   tableHeader.innerHTML = headerHtml;
   
   table.innerHTML='';
-  const cards=state[current]
-    .filter(c=>c.name.toLowerCase().includes(search.value.toLowerCase()));
-
-  cards.sort((a,b)=>{
+  
+  // Sort ALL cards first (before filtering)
+  const allCards = [...state[current]].sort((a,b)=>{
     // Handle null values
     if(a[sortKey] == null && b[sortKey] == null) return 0;
     if(a[sortKey] == null) return sortDir;
@@ -293,16 +292,33 @@ function render(){
     if(sortKey === 'price' || sortKey === 'qty') {
       return (Number(a[sortKey]) > Number(b[sortKey]) ? sortDir : -sortDir);
     }
+    // Total price sorting (calculated)
+    if(sortKey === 'totalPrice') {
+      const aTotal = (a.price || 0) * (a.qty || 0);
+      const bTotal = (b.price || 0) * (b.qty || 0);
+      return (aTotal > bTotal ? sortDir : -sortDir);
+    }
     // String comparison for names
     return a[sortKey] > b[sortKey] ? sortDir : -sortDir;
   });
+  
+  // Then filter by search term
+  const cards = allCards.filter(c=>c.name.toLowerCase().includes(search.value.toLowerCase()));
+  
+  // Then paginate
   const size=Number(pageSize.value);
+  const totalPages = Math.ceil(cards.length / size) || 1;
+  const currentPage = Math.min(page, totalPages - 1);
+  page = currentPage; // Ensure page is within bounds
   
   cards.slice(page*size,page*size+size).forEach(c=>{
     // Ensure backward compatibility - initialize fields if missing
     if(c.bought === undefined) c.bought = false;
     if(c.purchaseOrder === undefined) c.purchaseOrder = null;
     if(c.orderDetails === undefined) c.orderDetails = '';
+    
+    // Find the actual card in state to update
+    const cardInState = state[current].find(card => card.id === c.id);
     
     const r=document.createElement('tr');
     const manaCostDisplay = c.manaCost ? formatManaCost(c.manaCost) : '—';
@@ -328,13 +344,14 @@ function render(){
       html += `<td class="mana-cost col-manaCost">${manaCostDisplay}</td>`;
     }
     if(columnVisibility.qty) {
-      html += `<td class="col-qty"><input class=qty type=number value=${c.qty} onchange="c.qty=this.value;save();updateTotal()"></td>`;
+      html += `<td class="col-qty"><input class=qty type=number value="${c.qty}" onchange="const card=state[current].find(x=>x.id==='${c.id}');if(card){card.qty=Number(this.value);save();updateTotal();render();}"></td>`;
     }
     if(columnVisibility.price) {
       html += `<td class="price col-price">${c.price?c.price.toFixed(2):'—'}</td>`;
     }
     if(columnVisibility.totalPrice) {
-      const totalPrice = c.price && c.qty ? (c.price * c.qty).toFixed(2) : '—';
+      const qty = cardInState ? cardInState.qty : c.qty;
+      const totalPrice = c.price && qty ? (c.price * qty).toFixed(2) : '—';
       html += `<td class="price col-totalPrice">${totalPrice}</td>`;
     }
     if(columnVisibility.bought) {
@@ -349,6 +366,12 @@ function render(){
     r.onmouseenter=()=>showImage(c.name);
     table.appendChild(r);
   });
+
+  // Update page info display
+  const currentPageEl = document.getElementById('currentPage');
+  const totalPagesEl = document.getElementById('totalPages');
+  if (currentPageEl) currentPageEl.textContent = (page + 1).toString();
+  if (totalPagesEl) totalPagesEl.textContent = totalPages.toString();
 
   updateTotal(); 
   refreshListSelect(); 
@@ -583,6 +606,46 @@ function exportCSV(includeBought = false){
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download=`${current}${includeBought ? '_all' : '_unbought'}.csv`;
   a.click();
+}
+
+function exportForManaPool(includeBought = false){
+  const cardsToExport = includeBought 
+    ? state[current] 
+    : state[current].filter(c => !c.bought && c.sel);
+  
+  // Format: Quantity Card Name (one per line)
+  let text = '';
+  cardsToExport.forEach(c => {
+    text += `${c.qty} ${c.name}\n`;
+  });
+  
+  const blob = new Blob([text], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${current}_manapool${includeBought ? '_all' : '_unbought'}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportForTCGPlayer(includeBought = false){
+  const cardsToExport = includeBought 
+    ? state[current] 
+    : state[current].filter(c => !c.bought && c.sel);
+  
+  // Format: Card Name | Quantity (one per line, pipe-separated)
+  let text = '';
+  cardsToExport.forEach(c => {
+    text += `${c.name} | ${c.qty}\n`;
+  });
+  
+  const blob = new Blob([text], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${current}_tcgplayer${includeBought ? '_all' : '_unbought'}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function exportData(){

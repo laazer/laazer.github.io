@@ -286,6 +286,12 @@ tr:hover .card-links {
   align-items: center; 
 }
 
+.export-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 .image-panel img { 
   width: 100%; 
   border-radius: 12px; 
