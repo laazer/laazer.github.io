@@ -8,15 +8,50 @@ let sortKey='name', sortDir=1, page=0;
 let purchaseCounter = 0; // Track purchase order
 
 // Column visibility settings
-const COLUMN_KEYS = ['manaCost', 'qty', 'price', 'totalPrice', 'bought', 'orderDetails'];
+const COLUMN_KEYS = ['manaCost', 'qty', 'price', 'totalPrice', 'anchorScore', 'bought', 'orderDetails'];
 const DEFAULT_COLUMNS = {
   manaCost: true,
   qty: true,
   price: true,
   totalPrice: true,
+  anchorScore: true,
   bought: true,
   orderDetails: true
 };
+
+// Tier filter settings
+const DEFAULT_TIER_FILTERS = {
+  tierA: true,
+  tierB: true,
+  tierC: true,
+  deferCheap: false
+};
+
+function getTierFilters() {
+  try {
+    const saved = localStorage.getItem('mtgTierFilters');
+    return saved ? JSON.parse(saved) : DEFAULT_TIER_FILTERS;
+  } catch {
+    return DEFAULT_TIER_FILTERS;
+  }
+}
+
+function saveTierFilters(filters) {
+  localStorage.setItem('mtgTierFilters', JSON.stringify(filters));
+}
+
+// Calculate anchor score: (price || 0) * quantity
+function getAnchorScore(card) {
+  return (card.price || 0) * (card.qty || 0);
+}
+
+// Classify card into tier based on anchor score
+function getCardTier(card) {
+  const anchorScore = getAnchorScore(card);
+  if (anchorScore >= 20) return 'A';
+  if (anchorScore >= 5) return 'B';
+  return 'C';
+}
 
 function getColumnVisibility() {
   try {
@@ -35,6 +70,13 @@ function toggleColumn(columnKey) {
   const visibility = getColumnVisibility();
   visibility[columnKey] = !visibility[columnKey];
   saveColumnVisibility(visibility);
+  render();
+}
+
+function toggleTierFilter(filterKey) {
+  const filters = getTierFilters();
+  filters[filterKey] = !filters[filterKey];
+  saveTierFilters(filters);
   render();
 }
 
@@ -250,6 +292,13 @@ function render(){
     if(checkbox) checkbox.checked = columnVisibility[key];
   });
   
+  // Update tier filter checkboxes
+  const tierFilters = getTierFilters();
+  Object.keys(tierFilters).forEach(key => {
+    const checkbox = document.getElementById(`filter-${key}`);
+    if(checkbox) checkbox.checked = tierFilters[key];
+  });
+  
   // Render table header
   let headerHtml = '<th><input type="checkbox" onclick="toggleAll(this)"></th>';
   headerHtml += '<th onclick="sortBy(\'name\')">Card</th>';
@@ -264,6 +313,9 @@ function render(){
   }
   if(columnVisibility.totalPrice) {
     headerHtml += '<th onclick="sortBy(\'totalPrice\')" class="price col-totalPrice">Total</th>';
+  }
+  if(columnVisibility.anchorScore) {
+    headerHtml += '<th onclick="sortBy(\'anchorScore\')" class="price col-anchorScore">Anchor Score</th>';
   }
   if(columnVisibility.bought) {
     headerHtml += '<th class="col-bought">Bought</th>';
@@ -298,12 +350,34 @@ function render(){
       const bTotal = (b.price || 0) * (b.qty || 0);
       return (aTotal > bTotal ? sortDir : -sortDir);
     }
+    // Anchor score sorting (same as totalPrice but explicit)
+    if(sortKey === 'anchorScore') {
+      const aScore = getAnchorScore(a);
+      const bScore = getAnchorScore(b);
+      return (aScore > bScore ? sortDir : -sortDir);
+    }
     // String comparison for names
     return a[sortKey] > b[sortKey] ? sortDir : -sortDir;
   });
   
   // Then filter by search term
-  const cards = allCards.filter(c=>c.name.toLowerCase().includes(search.value.toLowerCase()));
+  let cards = allCards.filter(c=>c.name.toLowerCase().includes(search.value.toLowerCase()));
+  
+  // Apply tier filters (tierFilters already declared above)
+  cards = cards.filter(c => {
+    const tier = getCardTier(c);
+    const anchorScore = getAnchorScore(c);
+    
+    // Check tier visibility
+    if (tier === 'A' && !tierFilters.tierA) return false;
+    if (tier === 'B' && !tierFilters.tierB) return false;
+    if (tier === 'C' && !tierFilters.tierC) return false;
+    
+    // Defer cheap cards: hide Tier C cards under $1 total
+    if (tierFilters.deferCheap && tier === 'C' && anchorScore < 1) return false;
+    
+    return true;
+  });
   
   // Then paginate
   const size=Number(pageSize.value);
@@ -326,17 +400,27 @@ function render(){
     const boughtCheckbox = `<input type="checkbox" ${c.bought?'checked':''} onchange="toggleBought('${c.id}')" title="Mark as bought">`;
     const purchaseOrderDisplay = c.bought && c.purchaseOrder ? `<span class="purchase-order">#${c.purchaseOrder}</span>` : '';
     
+    // Calculate tier and anchor score
+    const anchorScore = getAnchorScore(c);
+    const tier = getCardTier(c);
+    const tierBadge = `<span class="tier-badge tier-${tier}" title="Tier ${tier} (Anchor Score: ${anchorScore.toFixed(2)})">${tier}</span>`;
+    const tierIcon = tier === 'A' ? '🔥' : '';
+    const shippingWarning = tier === 'C' ? '<span class="shipping-warning" title="Low-impact card — consider deferring to avoid extra shipping">⚠️</span>' : '';
+    
     const cardLinks = getSearchLinks(c.name);
     const cardNameWithLinks = `
-      <span class="card-name">${c.name} ${purchaseOrderDisplay}</span>
+      <span class="card-name">${tierIcon} ${c.name} ${purchaseOrderDisplay} ${tierBadge}</span>
       <span class="card-links">
         <a href="${cardLinks.scryfall}" target="_blank" rel="noopener noreferrer" title="Search on Scryfall">🔍</a>
         <a href="${cardLinks.tcgplayer}" target="_blank" rel="noopener noreferrer" title="Search on TCG Player">🛒</a>
         <a href="${cardLinks.manapool}" target="_blank" rel="noopener noreferrer" title="Search on Mana Pool">💎</a>
       </span>
+      ${shippingWarning}
     `;
     
-    r.className = boughtClass;
+    // Add tier class for styling
+    const tierClass = `tier-${tier.toLowerCase()}`;
+    r.className = `${boughtClass} ${tierClass}`.trim();
     let html = `<td><input type=checkbox ${c.sel?'checked':''} onchange="c.sel=this.checked;save();updateTotal()"></td>`;
     html += `<td class="card-name-cell">${cardNameWithLinks}</td>`;
     
@@ -353,6 +437,10 @@ function render(){
       const qty = cardInState ? cardInState.qty : c.qty;
       const totalPrice = c.price && qty ? (c.price * qty).toFixed(2) : '—';
       html += `<td class="price col-totalPrice">${totalPrice}</td>`;
+    }
+    if(columnVisibility.anchorScore) {
+      const score = anchorScore.toFixed(2);
+      html += `<td class="price col-anchorScore">${score}</td>`;
     }
     if(columnVisibility.bought) {
       html += `<td class="col-bought">${boughtCheckbox}</td>`;

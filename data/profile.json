@@ -1,0 +1,113 @@
+{
+  "contact": {
+    "email": "jabrandt31@gmail.com",
+    "linkedIn": "https://www.linkedin.com/in/brandtjacob/",
+    "github": "https://github.com/laazer"
+  },
+  "experience": [
+    {
+      "company": "Klaviyo",
+      "title": "Senior Software Engineer",
+      "dateRange": "January 2023 – Present",
+      "location": "Boston, Massachusetts",
+      "description": "Senior Software Engineer and Technical Product Owner on the Personalization Team. I lead the design, development, and deployment of machine learning-driven personalization solutions, spanning technical leadership, product strategy, and hands-on engineering.",
+      "highlights": [
+        "Built and maintain key personalization models: CLV, Channel Affinity, Expected Date of Next Order, Next Best Product, and Personalized Send Time using Python, Django, PySpark, Airflow, EMR, and Terraform.",
+        "Developed and maintain the RFM feature, the top-selling feature in Klaviyo's KDP and MA offering.",
+        "Led development of Expected Date of Next Cross Sell and Next Best Product models, from design to production deployment.",
+        "Leading development of a Personalized Send Time Optimization system to improve customer engagement."
+      ]
+    },
+    {
+      "company": "Perch",
+      "title": "Senior Software Engineer",
+      "dateRange": "September 2021 – November 2022",
+      "location": null,
+      "description": "Contributed to internal tools and data integrations supporting advertising and inventory optimization for products sold on Amazon.com.",
+      "highlights": [
+        "Designed and built manual advertising campaign controls for granular campaign management.",
+        "Led development of automated campaign controls that dynamically respond to stock status, improving efficiency and reducing waste.",
+        "Integrated Inventory Forecast data into the broader data pipeline and built an asynchronous process to upload it reliably at scale."
+      ]
+    },
+    {
+      "company": "Chewy",
+      "title": "Software Engineer III",
+      "dateRange": "February 2020 – September 2021",
+      "location": null,
+      "description": "Designed, developed, and deployed core backend services for personalization, pricing, and promotions. Led service architecture, wrote production-grade code, and collaborated with platform engineering for scalability and high availability.",
+      "highlights": [
+        "Designed and built the Segment Membership Service from the ground up—a RESTful service for verifying customer/product segment membership, deployed to AWS and used in production.",
+        "Led the design and code reviews for the Cart Validation Engine (promotion eligibility, promotion codes), deployed to AWS.",
+        "Partnered with platform engineering on multi-region architecture, developing recovery strategies and data synchronization plans that were successfully deployed to production.",
+        "Led architectural design for Chewy's next-generation pricing engine and contributed to implementation and code review."
+      ]
+    },
+    {
+      "company": "Chewy",
+      "title": "Software Engineer II",
+      "dateRange": "October 2018 – February 2020",
+      "location": null,
+      "description": "Built scalable internal platforms for non-technical stakeholders to manage promotions and customer segmentation. Contributed to backend service design and frontend integration.",
+      "highlights": [
+        "Led the design and build of the SQL statement builder engine and APIs for the Segment Management Service; migrated from on-prem to AWS (Nebula 2).",
+        "Led the design and implementation of the Cart Validation Model and migration from legacy Java-based promotions; built the React-based Promotion Authoring Platform and deployed it to production."
+      ]
+    },
+    {
+      "company": "Amazon Robotics",
+      "title": "Software Development Engineer I",
+      "dateRange": "January 2017 – October 2018",
+      "location": null,
+      "description": "SDE on the Movement Services team. Lead engineer for the service that manages maintenance activities at Amazon fulfillment centers.",
+      "highlights": [
+        "The service uses AWS tools including SWF, DynamoDB, and S3 for managing, scheduling, and storing maintenance activities on fulfillment center floors."
+      ]
+    },
+    {
+      "company": "Northeastern University College of Computer and Information Sciences",
+      "title": "Fundamentals of Computer Science II TA",
+      "dateRange": "September 2013 – May 2016",
+      "location": "Greater Boston Area",
+      "description": "Oversaw students' hands-on work with basic computer science concepts and Java. Led workshops on functional and object-oriented Java and provided office hours for one-on-one help.",
+      "highlights": []
+    },
+    {
+      "company": "Eze Software Group",
+      "title": "Software Development Co-op",
+      "dateRange": "January 2015 – June 2015",
+      "location": null,
+      "description": "Used C# to create support tools that monitor the company's OMS trading service and record trading data to ensure reliability.",
+      "highlights": [
+        "The tools export recorded data in JSON format. Designed a command-line version of the consistency support tool and wrote documentation for it."
+      ]
+    },
+    {
+      "company": "EverCompliant Ltd",
+      "title": "Software Developer",
+      "dateRange": "July 2014 – August 2014",
+      "location": null,
+      "description": "Developed web crawlers to scrape millions of websites for varied, irregularly formatted data (emails, phone numbers, addresses) with multi-threading for efficiency.",
+      "highlights": [
+        "The crawlers interacted with an API to retrieve URLs and push scraped data as valid JSON. Built screen-capture and report-generation tools."
+      ]
+    },
+    {
+      "company": "True Fit Corporation",
+      "title": "Software Engineering Intern",
+      "dateRange": "January 2014 – June 2014",
+      "location": null,
+      "description": "Updated the look of various stores' True Fit applications with HTML and CSS. Built a RESTful File Library API for True Fit's large file system in Scala.",
+      "highlights": [
+        "Added features to True Fit's test website in Scala to help ensure the quality of the web application."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Northeastern University",
+      "degree": "Computer Science",
+      "dateRange": "2012 – 2016"
+    }
+  ]
+}

@@ -92,7 +92,9 @@ body > * {
 
 .section:nth-child(2) { animation-delay: 0.1s; }
 .section:nth-child(3) { animation-delay: 0.2s; }
-.section:nth-child(4) { animation-delay: 0.3s; }
+.section:nth-child(4) { animation-delay: 0.25s; }
+.section:nth-child(5) { animation-delay: 0.3s; }
+.section:nth-child(6) { animation-delay: 0.35s; }
 
 @keyframes fadeInUp {
   from {
@@ -148,7 +150,7 @@ body > * {
 .project-card {
   display: block;
   padding: 28px;
-  margin-bottom: 0;
+  margin-bottom: 24px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -190,10 +192,160 @@ body > * {
   gap: 8px;
 }
 
+.project-card:last-child {
+  margin-bottom: 0;
+}
+
 .project-card p {
   margin: 0;
   color: var(--text);
   line-height: 1.7;
+}
+
+#experience-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.experience-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.experience-pagination-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.experience-pagination-btn:hover:not(:disabled) {
+  background: rgba(125, 211, 252, 0.15);
+  border-color: rgba(125, 211, 252, 0.35);
+  color: var(--accent);
+}
+
+.experience-pagination-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.experience-pagination-info {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.experience-pagination-info .experience-page-num {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.experience-loading,
+.experience-error {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.experience-card {
+  padding: 28px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px) saturate(160%);
+  position: relative;
+  overflow: hidden;
+}
+
+.experience-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.08), transparent);
+  transition: left 0.5s;
+}
+
+.experience-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(125, 211, 252, 0.3);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(125, 211, 252, 0.1) inset;
+  transform: translateY(-2px);
+}
+
+.experience-card:hover::before {
+  left: 100%;
+}
+
+.experience-card-header {
+  margin-bottom: 12px;
+}
+
+.experience-company {
+  margin: 0 0 4px 0;
+  color: var(--accent);
+  font-size: 1.35rem;
+}
+
+.experience-title {
+  margin: 0 0 4px 0;
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.experience-meta {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.experience-description {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.experience-highlights {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--text);
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.experience-highlights li {
+  margin-bottom: 6px;
+}
+
+.experience-highlights li:last-child {
+  margin-bottom: 0;
 }
 
 .contact-info {
@@ -225,6 +377,13 @@ footer p {
   margin: 0 0 24px 0;
   color: var(--text-muted);
   font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .github-link {
@@ -280,6 +439,10 @@ footer p {
   
   .section h2 {
     font-size: 1.75rem;
+  }
+
+  .experience-card {
+    padding: 24px;
   }
 }
 

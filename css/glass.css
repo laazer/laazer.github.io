@@ -264,6 +264,76 @@ tr:hover .card-links {
   box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.1);
 }
 
+/* Tier badges */
+.tier-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.tier-badge.tier-A {
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: white;
+}
+
+.tier-badge.tier-B {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.tier-badge.tier-C {
+  background: rgba(156, 163, 175, 0.3);
+  color: var(--text);
+  border: 1px solid rgba(156, 163, 175, 0.5);
+}
+
+/* Tier row highlighting */
+tr.tier-a {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+tr.tier-a:hover {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* Shipping warning */
+.shipping-warning {
+  margin-left: 6px;
+  opacity: 0.7;
+  cursor: help;
+}
+
+/* Tier filter controls */
+.tier-filters {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tier-filters label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--text);
+  user-select: none;
+}
+
+.tier-filters label:hover {
+  color: var(--accent);
+}
+
+.tier-filters input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
 /* Layout Utilities */
 .layout { 
   display: grid; 

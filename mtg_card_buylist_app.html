@@ -38,10 +38,19 @@
           <label><input type="checkbox" id="col-qty" onchange="toggleColumn('qty')" checked> Quantity</label>
           <label><input type="checkbox" id="col-price" onchange="toggleColumn('price')" checked> Per Card</label>
           <label><input type="checkbox" id="col-totalPrice" onchange="toggleColumn('totalPrice')" checked> Total Price</label>
+          <label><input type="checkbox" id="col-anchorScore" onchange="toggleColumn('anchorScore')" checked> Anchor Score</label>
           <label><input type="checkbox" id="col-bought" onchange="toggleColumn('bought')" checked> Bought</label>
           <label><input type="checkbox" id="col-orderDetails" onchange="toggleColumn('orderDetails')" checked> Order Details</label>
         </div>
       </div>
+    </div>
+
+    <div class="tier-filters glass" style="padding:12px; margin-bottom:12px;">
+      <strong>Filter by Tier:</strong>
+      <label><input type="checkbox" id="filter-tierA" onchange="toggleTierFilter('tierA')" checked> Tier A (Anchor) <span class="tier-badge tier-A">A</span></label>
+      <label><input type="checkbox" id="filter-tierB" onchange="toggleTierFilter('tierB')" checked> Tier B (Glue) <span class="tier-badge tier-B">B</span></label>
+      <label><input type="checkbox" id="filter-tierC" onchange="toggleTierFilter('tierC')" checked> Tier C (Passenger) <span class="tier-badge tier-C">C</span></label>
+      <label><input type="checkbox" id="filter-deferCheap" onchange="toggleTierFilter('deferCheap')"> Hide Passenger Cards Under $1 Total</label>
     </div>
 
     <table>
