@@ -109,5 +109,13 @@
       "degree": "Computer Science",
       "dateRange": "2012 – 2016"
     }
+  ],
+  "blogs": [
+    {
+      "title": "Piloting Through the Fog: A Tale of Migrating to a New Kubernetes Platform",
+      "type": "medium",
+      "url": "https://klaviyo.tech/piloting-through-the-fog-a-tale-of-migrating-to-a-new-kubernetes-platform-7fe5677310fa",
+      "date": "2023"
+    }
   ]
 }
