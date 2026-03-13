@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Post - Laazer</title>
+  <meta name="description" content="Blog post" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/glass.css">
+  <link rel="stylesheet" href="css/blog.css">
+  <link rel="shortcut icon" href="images/lzr2-favicon.ico">
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="blog-shell">
+    <header class="blog-nav">
+      <a href="index.html#blogs" class="blog-back-link">← Back to all posts</a>
+    </header>
+
+    <header class="blog-header glass">
+      <div class="blog-type-badge" id="blog-type-badge" style="display:none;"></div>
+      <div class="blog-meta" id="blog-meta" style="display:none;"></div>
+      <h1 class="blog-title-main" id="blog-title">Loading…</h1>
+    </header>
+
+    <main class="blog-content glass">
+      <article class="blog-body" id="blog-body">
+        <p class="blog-loading">Loading post…</p>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var postPath = params.get('post');
+      var titleEl = document.getElementById('blog-title');
+      var bodyEl = document.getElementById('blog-body');
+      var typeBadgeEl = document.getElementById('blog-type-badge');
+      var metaEl = document.getElementById('blog-meta');
+
+      function showError(msg) {
+        titleEl.textContent = 'Post not found';
+        bodyEl.innerHTML = '<p class="blog-error">' + msg + '</p>';
+      }
+
+      function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function findBlogMeta(profile, path) {
+        if (!profile || !Array.isArray(profile.blogs)) return null;
+        for (var i = 0; i < profile.blogs.length; i++) {
+          if (profile.blogs[i].url === path) return profile.blogs[i];
+        }
+        return null;
+      }
+
+      function getBlogTypeIcon(type) {
+        var icons = {
+          'medium': '📝',
+          'linkedin': '💼',
+          'local': '📄'
+        };
+        return icons[type] || '📚';
+      }
+
+      function getBlogTypeLabel(type) {
+        var labels = {
+          'medium': 'Medium',
+          'linkedin': 'LinkedIn Article',
+          'local': 'Blog Post'
+        };
+        return labels[type] || (type || 'Blog');
+      }
+
+      function setMeta(profile) {
+        var shared = window['__profileData'] || profile || null;
+        if (!shared || !postPath) return;
+        var blog = findBlogMeta(shared, postPath);
+        if (!blog) return;
+
+        titleEl.textContent = blog.title || 'Blog Post';
+        document.title = blog.title + ' - Laazer';
+
+        typeBadgeEl.textContent = getBlogTypeIcon(blog.type) + ' ' + getBlogTypeLabel(blog.type);
+        typeBadgeEl.style.display = 'inline-flex';
+
+        if (blog.date) {
+          metaEl.textContent = blog.date;
+          metaEl.style.display = 'flex';
+        }
+      }
+
+      function ensureProfileThenMeta() {
+        var shared = window['__profileData'];
+        if (shared) {
+          setMeta(shared);
+          return Promise.resolve(shared);
+        }
+
+        var href = window.location.href.replace(/[#?].*$/, '');
+        var base = href.substring(0, href.lastIndexOf('/') + 1);
+        var url = base + 'data/profile.json';
+
+        return fetch(url)
+          .then(function (res) {
+            return res.ok ? res.json() : Promise.reject();
+          })
+          .then(function (data) {
+            try { window['__profileData'] = data; } catch (e) {}
+            setMeta(data);
+            return data;
+          })
+          .catch(function () {
+            // If profile fails, we still render the post content.
+          });
+      }
+
+      function loadPost() {
+        if (!postPath) {
+          showError('No blog post specified.');
+          return;
+        }
+
+        ensureProfileThenMeta();
+
+        fetch(postPath)
+          .then(function (res) {
+            if (!res.ok) throw new Error('Failed to load post.');
+            return res.text();
+          })
+          .then(function (markdown) {
+            var html = '';
+            try {
+              html = window.marked ? window.marked.parse(markdown) : escapeHtml(markdown);
+            } catch (e) {
+              html = escapeHtml(markdown);
+            }
+            bodyEl.innerHTML = html;
+          })
+          .catch(function () {
+            showError('Unable to load this blog post.');
+          });
+      }
+
+      loadPost();
+    })();
+  </script>
+</body>
+</html>
+

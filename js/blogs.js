@@ -107,9 +107,14 @@
     html += '</div>';
     html += '<h3 class="blog-title">' + escapeHtml(blog.title) + '</h3>';
     html += '<p class="blog-preview">' + escapeHtml(preview) + '</p>';
-    
+
     var linkTarget = blog.type === 'local' ? '' : ' target="_blank" rel="noopener noreferrer"';
-    var href = blog.url || '#';
+    var href;
+    if (blog.type === 'local') {
+      href = 'blog.html?post=' + encodeURIComponent(blog.url);
+    } else {
+      href = blog.url || '#';
+    }
     html += '<a href="' + escapeHtml(href) + '"' + linkTarget + ' class="blog-read-more">Read More →</a>';
     
     html += '</article>';
@@ -133,6 +138,13 @@
   }
 
   function loadBlogs() {
+    // Prefer shared profile data if it has already been loaded by profile.js
+    var shared = window['__profileData'];
+    if (shared && Array.isArray(shared.blogs)) {
+      renderBlogs(shared.blogs);
+      return;
+    }
+
     var href = window.location.href.replace(/[#?].*$/, '');
     var base = href.substring(0, href.lastIndexOf('/') + 1);
     var url = base + 'data/profile.json';
@@ -143,6 +155,11 @@
         return res.json();
       })
       .then(function (data) {
+        try {
+          window['__profileData'] = data;
+        } catch (e) {
+          // Ignore if window is not writable in this environment
+        }
         renderBlogs(data.blogs);
       })
       .catch(function (err) {
@@ -151,6 +168,11 @@
         if (el && el.textContent) {
           try {
             var data = JSON.parse(el.textContent);
+            try {
+              window['__profileData'] = data;
+            } catch (e2) {
+              // Ignore if window is not writable
+            }
             renderBlogs(data.blogs);
           } catch (e) {
             console.error('Profile parse error:', e);

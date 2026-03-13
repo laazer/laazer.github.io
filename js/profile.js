@@ -115,6 +115,13 @@
       showError('Unable to load experience.');
       return;
     }
+    // Expose profile data globally so other modules (like blogs.js)
+    // can reuse the same source of truth without re-fetching.
+    try {
+      window['__profileData'] = data;
+    } catch (e) {
+      // Ignore if window is not available (e.g., unusual environments)
+    }
     allJobs = data.experience;
     currentPage = 1;
     showAll = false;
