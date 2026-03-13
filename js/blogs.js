@@ -72,9 +72,9 @@
         })
         .then(function (content) {
           var preview = content.split('\n').find(function (line) {
-            return line.trim().length > 20 && !line.startsWith('#');
+            return (line.trim().length > 20 && !line.startsWith('#') && !line.startsWith('!') && !line.startsWith('<img') && !line.startsWith('['));
           }) || 'Read this blog post.';
-          previewCache[blog.url] = preview.substring(0, 300);
+          previewCache[blog.url] = preview.substring(0, 300) + '...';
           return previewCache[blog.url];
         })
         .catch(function () {
