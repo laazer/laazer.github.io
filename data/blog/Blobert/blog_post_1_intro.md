@@ -1,3 +1,5 @@
+![Caught Blogging](images/caughtblogging.jpeg)
+
 # Blobert: A Completely Reasonable Use of My Free Time
 
 Every engineer eventually reaches a point where they decide to do something wildly outside their area of expertise.
@@ -108,3 +110,7 @@ That’s Blobert.
 Next step: make a blob.
 
 What could possibly go wrong.
+
+Here's the first concept image of Blobert (100% AI generated 😉).
+<br><br>
+<img src="images/Blobert/concept_image_1.png" alt="drawing" style="width:700px;"/>
