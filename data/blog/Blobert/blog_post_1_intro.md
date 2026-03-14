@@ -11,6 +11,8 @@ I, apparently, decided to build a video game. (What is wrong with me?)
 
 As a child, I remember a game my cousin had for his N64. It was the the absolute best time! Kirby 64: The Crystal Shards, you play as Kirby, a cute, pink, blob-like character who can absorb abilities from enemies and combine them to create new ones. It was a simple, but incredibly fun game that I could have played for hours on end. But I didn't and don't have N64. Right now the only way to legally play it is to buy the game on the Nintendo Switch Online service and pay the monthly fee + by the game. 
 
+<img src="images/Blobert/kirby64/k64_sucking.png" alt="drawing" style="width:700px;"/>
+<br><br>
 Now most people might value their time more than I do, and just buy the game. But I'm not most people. I make bad life choices. So I decided to build my own version of Kirby 64: The Crystal Shards. A better version. With blackjacks and hookers, jk. But I do want to bring back the magic of the original game.
 
 ## The Moment of Poor Judgment
