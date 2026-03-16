@@ -110,6 +110,20 @@
       "dateRange": "2012 – 2016"
     }
   ],
+  "projects": [
+    {
+      "title": "🧙 MTG Buylist Builder",
+      "description": "A tool for building and managing Magic: The Gathering card buylists with price tracking, multiple saved lists, and bulk operations.",
+      "url": "mtg_card_buylist_app.html",
+      "type": "local"
+    },
+    {
+      "title": "🧪 Blobert: Lab Escape Slime",
+      "description": "A cozy 2.5D experimental platformer about mutation, physical experimentation, and elastic game feel.",
+      "url": "https://github.com/laazer/blobert",
+      "type": "external"
+    }
+  ],
   "blogs": [
     {
       "title": "Piloting Through the Fog: A Tale of Migrating to a New Kubernetes Platform",

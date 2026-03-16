@@ -344,7 +344,9 @@ body {
   margin-bottom: 24px;
 }
 
-.experience-pagination {
+.experience-pagination,
+.blogs-pagination,
+.projects-pagination {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -352,9 +354,12 @@ body {
   gap: 12px;
   padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 24px;
 }
 
-.experience-pagination-btn {
+.experience-pagination-btn,
+.blogs-pagination-btn,
+.projects-pagination-btn {
   padding: 10px 18px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -367,23 +372,31 @@ body {
   font-family: inherit;
 }
 
-.experience-pagination-btn:hover:not(:disabled) {
+.experience-pagination-btn:hover:not(:disabled),
+.blogs-pagination-btn:hover:not(:disabled),
+.projects-pagination-btn:hover:not(:disabled) {
   background: rgba(125, 211, 252, 0.15);
   border-color: rgba(125, 211, 252, 0.35);
   color: var(--accent);
 }
 
-.experience-pagination-btn:disabled {
+.experience-pagination-btn:disabled,
+.blogs-pagination-btn:disabled,
+.projects-pagination-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.experience-pagination-info {
+.experience-pagination-info,
+.blogs-pagination-info,
+.projects-pagination-info {
   color: var(--text-muted);
   font-size: 0.95rem;
 }
 
-.experience-pagination-info .experience-page-num {
+.experience-pagination-info .experience-page-num,
+.blogs-pagination-info .blogs-page-num,
+.projects-pagination-info .projects-page-num {
   color: var(--accent);
   font-weight: 600;
 }
@@ -536,12 +549,39 @@ footer p {
   box-shadow: 0 8px 20px rgba(125, 211, 252, 0.3);
 }
 
-.github-link svg {
+.github-link svg,
+.github-link img {
   transition: transform 0.3s ease;
 }
 
-.github-link:hover svg {
+.github-link img {
+  filter: brightness(0) invert(1);
+}
+
+.github-link:hover svg,
+.github-link:hover img {
   transform: rotate(15deg) scale(1.1);
+}
+
+/* Projects dynamic root */
+#projects-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.projects-empty,
+.projects-error,
+.projects-loading {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin: 0;
 }
 
 /* Blog Styles */
@@ -558,7 +598,8 @@ footer p {
 }
 
 .blogs-empty,
-.blogs-error {
+.blogs-error,
+.blogs-loading {
   color: var(--text-muted);
   font-size: 1rem;
   margin: 0;

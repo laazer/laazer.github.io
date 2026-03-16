@@ -2,6 +2,12 @@
   var root = document.getElementById('blogs-root');
   if (!root) return;
 
+  var PER_PAGE = 3;
+  var allBlogs = [];
+  var currentPage = 1;
+  var showAll = false;
+  var reversed = false;
+
   var previewCache = {};
 
   function showError(msg) {
@@ -33,11 +39,9 @@
   }
 
   function extractFirstParagraph(html) {
-    // Remove script and style tags
     var cleaned = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
     cleaned = cleaned.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
-    
-    // Find first paragraph or meaningful text
+
     var pMatch = cleaned.match(/<p[^>]*>([^<]+(?:<(?!\/p>)[^<]*)*)<\/p>/i);
     if (pMatch && pMatch[1]) {
       var text = pMatch[1].replace(/<[^>]+>/g, '').trim();
@@ -45,13 +49,12 @@
         return text.substring(0, 300) + (text.length > 300 ? '...' : '');
       }
     }
-    
-    // Fallback: find any text content
+
     var textMatch = cleaned.replace(/<[^>]+>/g, '').trim();
     if (textMatch.length > 20) {
       return textMatch.substring(0, 300) + (textMatch.length > 300 ? '...' : '');
     }
-    
+
     return 'Read this article for more insights.';
   }
 
@@ -64,7 +67,6 @@
       return Promise.resolve(previewCache[blog.url]);
     }
 
-    // For local files
     if (blog.type === 'local') {
       return fetch(blog.url)
         .then(function (res) {
@@ -82,7 +84,6 @@
         });
     }
 
-    // For web articles (Medium, LinkedIn, etc)
     return fetch(blog.url)
       .then(function (res) {
         return res.ok ? res.text() : Promise.reject('Failed to load');
@@ -116,9 +117,94 @@
       href = blog.url || '#';
     }
     html += '<a href="' + escapeHtml(href) + '"' + linkTarget + ' class="blog-read-more">Read More →</a>';
-    
+
     html += '</article>';
     return html;
+  }
+
+  function orderedBlogs() {
+    return reversed ? allBlogs.slice().reverse() : allBlogs;
+  }
+
+  function totalPages() {
+    return Math.max(1, Math.ceil(allBlogs.length / PER_PAGE));
+  }
+
+  function renderPagination() {
+    var total = totalPages();
+    var prevDisabled = currentPage <= 1 ? ' disabled' : '';
+    var nextDisabled = currentPage >= total ? ' disabled' : '';
+    var reverseLabel = reversed ? '↑ Oldest first' : '↓ Newest first';
+    var html = '<div class="blogs-pagination">';
+    html += '<button type="button" class="blogs-pagination-btn blogs-pagination-prev" aria-label="Previous page"' + prevDisabled + '>Previous</button>';
+    html += '<span class="blogs-pagination-info">Page <span class="blogs-page-num">' + currentPage + '</span> of ' + total + '</span>';
+    html += '<button type="button" class="blogs-pagination-btn blogs-pagination-next" aria-label="Next page"' + nextDisabled + '>Next</button>';
+    html += '<button type="button" class="blogs-pagination-btn blogs-pagination-expand">Show all</button>';
+    html += '<button type="button" class="blogs-pagination-btn blogs-pagination-reverse">' + reverseLabel + '</button>';
+    html += '</div>';
+    return html;
+  }
+
+  function render() {
+    var ordered = orderedBlogs();
+    var blogsToShow;
+    var paginationHtml = '';
+    var reverseLabel = reversed ? '↑ Oldest first' : '↓ Newest first';
+    if (showAll) {
+      blogsToShow = ordered;
+      paginationHtml = '<div class="blogs-pagination">';
+      paginationHtml += '<button type="button" class="blogs-pagination-btn blogs-pagination-collapse">Show ' + PER_PAGE + ' per page</button>';
+      paginationHtml += '<button type="button" class="blogs-pagination-btn blogs-pagination-reverse">' + reverseLabel + '</button>';
+      paginationHtml += '</div>';
+    } else {
+      var start = (currentPage - 1) * PER_PAGE;
+      blogsToShow = ordered.slice(start, start + PER_PAGE);
+      paginationHtml = renderPagination();
+    }
+
+    root.innerHTML = '<div class="blogs-list"></div>' + paginationHtml;
+    var blogsList = root.querySelector('.blogs-list');
+    bindPagination();
+
+    Promise.all(blogsToShow.map(function (blog) {
+      return fetchPreview(blog).then(function (preview) {
+        return blogCardHtml(blog, preview);
+      });
+    })).then(function (cards) {
+      blogsList.innerHTML = cards.join('');
+    });
+  }
+
+  function bindPagination() {
+    var prev = root.querySelector('.blogs-pagination-prev');
+    var next = root.querySelector('.blogs-pagination-next');
+    var expand = root.querySelector('.blogs-pagination-expand');
+    var collapse = root.querySelector('.blogs-pagination-collapse');
+    var reverse = root.querySelector('.blogs-pagination-reverse');
+    if (prev) prev.addEventListener('click', function () { setPage(currentPage - 1); });
+    if (next) next.addEventListener('click', function () { setPage(currentPage + 1); });
+    if (expand) expand.addEventListener('click', function () { setShowAll(true); });
+    if (collapse) collapse.addEventListener('click', function () { setShowAll(false); });
+    if (reverse) reverse.addEventListener('click', function () { toggleReverse(); });
+  }
+
+  function toggleReverse() {
+    reversed = !reversed;
+    currentPage = 1;
+    render();
+  }
+
+  function setPage(page) {
+    var total = totalPages();
+    if (page < 1) page = 1;
+    if (page > total) page = total;
+    currentPage = page;
+    render();
+  }
+
+  function setShowAll(all) {
+    showAll = all;
+    render();
   }
 
   function renderBlogs(blogs) {
@@ -126,19 +212,14 @@
       root.innerHTML = '<p class="blogs-empty">No blog posts yet.</p>';
       return;
     }
-
-    root.innerHTML = '<div class="blogs-list"></div>';
-    var blogsList = root.querySelector('.blogs-list');
-
-    blogs.forEach(function (blog) {
-      fetchPreview(blog).then(function (preview) {
-        blogsList.innerHTML += blogCardHtml(blog, preview);
-      });
-    });
+    allBlogs = blogs;
+    currentPage = 1;
+    showAll = false;
+    reversed = false;
+    render();
   }
 
   function loadBlogs() {
-    // Prefer shared profile data if it has already been loaded by profile.js
     var shared = window['__profileData'];
     if (shared && Array.isArray(shared.blogs)) {
       renderBlogs(shared.blogs);
@@ -155,11 +236,7 @@
         return res.json();
       })
       .then(function (data) {
-        try {
-          window['__profileData'] = data;
-        } catch (e) {
-          // Ignore if window is not writable in this environment
-        }
+        try { window['__profileData'] = data; } catch (e) {}
         renderBlogs(data.blogs);
       })
       .catch(function (err) {
@@ -168,11 +245,7 @@
         if (el && el.textContent) {
           try {
             var data = JSON.parse(el.textContent);
-            try {
-              window['__profileData'] = data;
-            } catch (e2) {
-              // Ignore if window is not writable
-            }
+            try { window['__profileData'] = data; } catch (e2) {}
             renderBlogs(data.blogs);
           } catch (e) {
             console.error('Profile parse error:', e);
@@ -186,4 +259,3 @@
 
   loadBlogs();
 })();
-
