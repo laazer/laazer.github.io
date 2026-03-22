@@ -6,7 +6,8 @@
   var allBlogs = [];
   var currentPage = 1;
   var showAll = false;
-  var reversed = false;
+  /** Default: show posts with latest `date` first. Toggle shows oldest first. */
+  var newestFirst = true;
 
   var previewCache = {};
 
@@ -122,25 +123,65 @@
     return html;
   }
 
+  /**
+   * Sortable key: YYYYMMDD. Missing/invalid dates sort as 00000000 (end when newest-first).
+   * Handles "2023", "2024/08/24", "2026/03/10".
+   */
+  function blogDateKey(blog) {
+    var d = blog.date;
+    if (d == null || d === '') return '00000000';
+    d = String(d).trim();
+    var parts = d.split('/');
+    var y = parseInt(parts[0], 10);
+    if (isNaN(y) || y < 0) return '00000000';
+    var mo = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+    var day = parts.length > 2 ? parseInt(parts[2], 10) : 1;
+    if (isNaN(mo) || isNaN(day)) return '00000000';
+    var ys = String(y).padStart(4, '0');
+    var ms = String(Math.min(12, Math.max(1, mo))).padStart(2, '0');
+    var ds = String(Math.min(31, Math.max(1, day))).padStart(2, '0');
+    return ys + ms + ds;
+  }
+
   function orderedBlogs() {
-    return reversed ? allBlogs.slice().reverse() : allBlogs;
+    var decorated = allBlogs.map(function (b, i) {
+      return { blog: b, i: i, k: blogDateKey(b) };
+    });
+    decorated.sort(function (x, y) {
+      var cmp = newestFirst
+        ? y.k.localeCompare(x.k)
+        : x.k.localeCompare(y.k);
+      if (cmp !== 0) return cmp;
+      return x.i - y.i;
+    });
+    return decorated.map(function (x) {
+      return x.blog;
+    });
   }
 
   function totalPages() {
     return Math.max(1, Math.ceil(allBlogs.length / PER_PAGE));
   }
 
+  function sortToggleHtml() {
+    /* Label = current order (not “what you get if you click”). */
+    var label = newestFirst ? '↓ Newest first' : '↑ Oldest first';
+    var title = newestFirst
+      ? 'Posts are sorted newest-first by date. Click to show oldest first.'
+      : 'Posts are sorted oldest-first. Click to show newest first.';
+    return '<button type="button" class="blogs-pagination-btn blogs-pagination-reverse" title="' + escapeHtml(title) + '" aria-pressed="' + (newestFirst ? 'true' : 'false') + '">' + escapeHtml(label) + '</button>';
+  }
+
   function renderPagination() {
     var total = totalPages();
     var prevDisabled = currentPage <= 1 ? ' disabled' : '';
     var nextDisabled = currentPage >= total ? ' disabled' : '';
-    var reverseLabel = reversed ? '↑ Oldest first' : '↓ Newest first';
     var html = '<div class="blogs-pagination">';
     html += '<button type="button" class="blogs-pagination-btn blogs-pagination-prev" aria-label="Previous page"' + prevDisabled + '>Previous</button>';
     html += '<span class="blogs-pagination-info">Page <span class="blogs-page-num">' + currentPage + '</span> of ' + total + '</span>';
     html += '<button type="button" class="blogs-pagination-btn blogs-pagination-next" aria-label="Next page"' + nextDisabled + '>Next</button>';
     html += '<button type="button" class="blogs-pagination-btn blogs-pagination-expand">Show all</button>';
-    html += '<button type="button" class="blogs-pagination-btn blogs-pagination-reverse">' + reverseLabel + '</button>';
+    html += sortToggleHtml();
     html += '</div>';
     return html;
   }
@@ -149,12 +190,11 @@
     var ordered = orderedBlogs();
     var blogsToShow;
     var paginationHtml = '';
-    var reverseLabel = reversed ? '↑ Oldest first' : '↓ Newest first';
     if (showAll) {
       blogsToShow = ordered;
       paginationHtml = '<div class="blogs-pagination">';
       paginationHtml += '<button type="button" class="blogs-pagination-btn blogs-pagination-collapse">Show ' + PER_PAGE + ' per page</button>';
-      paginationHtml += '<button type="button" class="blogs-pagination-btn blogs-pagination-reverse">' + reverseLabel + '</button>';
+      paginationHtml += sortToggleHtml();
       paginationHtml += '</div>';
     } else {
       var start = (currentPage - 1) * PER_PAGE;
@@ -189,7 +229,7 @@
   }
 
   function toggleReverse() {
-    reversed = !reversed;
+    newestFirst = !newestFirst;
     currentPage = 1;
     render();
   }
@@ -215,38 +255,54 @@
     allBlogs = blogs;
     currentPage = 1;
     showAll = false;
-    reversed = false;
+    newestFirst = true;
     render();
   }
 
   function loadBlogs() {
+    var consumed = false;
+
+    function consume(data) {
+      if (consumed || !data) return;
+      consumed = true;
+      try {
+        window['__profileData'] = data;
+      } catch (e) {
+        /* ignore */
+      }
+      renderBlogs(data.blogs);
+    }
+
     var shared = window['__profileData'];
-    if (shared && Array.isArray(shared.blogs)) {
-      renderBlogs(shared.blogs);
+    if (shared) {
+      consume(shared);
       return;
     }
+
+    window.addEventListener('laazer:profile', function onProfile(e) {
+      window.removeEventListener('laazer:profile', onProfile);
+      consume(e.detail);
+    });
 
     var href = window.location.href.replace(/[#?].*$/, '');
     var base = href.substring(0, href.lastIndexOf('/') + 1);
     var url = base + 'data/profile.json';
 
-    fetch(url)
+    fetch(url, { cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) throw new Error('Failed to load profile');
         return res.json();
       })
       .then(function (data) {
-        try { window['__profileData'] = data; } catch (e) {}
-        renderBlogs(data.blogs);
+        consume(data);
       })
       .catch(function (err) {
         console.warn('Blog fetch failed, using inline fallback:', err);
+        if (consumed) return;
         var el = document.getElementById('profile-data');
         if (el && el.textContent) {
           try {
-            var data = JSON.parse(el.textContent);
-            try { window['__profileData'] = data; } catch (e2) {}
-            renderBlogs(data.blogs);
+            consume(JSON.parse(el.textContent));
           } catch (e) {
             console.error('Profile parse error:', e);
             showError('Unable to load blog posts.');

@@ -1,6 +1,5 @@
 (function () {
   var root = document.getElementById('experience-root');
-  if (!root) return;
 
   var PER_PAGE = 3;
   var allJobs = [];
@@ -8,7 +7,21 @@
   var showAll = false;
 
   function showError(msg) {
+    if (!root) {
+      console.warn('Experience:', msg);
+      return;
+    }
     root.innerHTML = '<p class="experience-error">' + escapeHtml(msg) + '</p>';
+  }
+
+  /** Share profile with projects, blogs, etc. (always call this when JSON loads). */
+  function publishProfileData(data) {
+    try {
+      window['__profileData'] = data;
+      window.dispatchEvent(new CustomEvent('laazer:profile', { detail: data }));
+    } catch (e) {
+      /* ignore */
+    }
   }
 
   function escapeHtml(text) {
@@ -111,16 +124,15 @@
   }
 
   function renderExperience(data) {
+    publishProfileData(data);
+
+    if (!root) {
+      return;
+    }
+
     if (!data.experience || !Array.isArray(data.experience)) {
       showError('Unable to load experience.');
       return;
-    }
-    // Expose profile data globally so other modules (like blogs.js)
-    // can reuse the same source of truth without re-fetching.
-    try {
-      window['__profileData'] = data;
-    } catch (e) {
-      // Ignore if window is not available (e.g., unusual environments)
     }
     allJobs = data.experience;
     currentPage = 1;
@@ -141,7 +153,7 @@
     var base = href.substring(0, href.lastIndexOf('/') + 1);
     var url = base + 'data/profile.json';
 
-    fetch(url)
+    fetch(url, { cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) throw new Error('Failed to load profile');
         return res.json();

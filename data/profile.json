@@ -112,16 +112,22 @@
   ],
   "projects": [
     {
-      "title": "🧙 MTG Buylist Builder",
-      "description": "A tool for building and managing Magic: The Gathering card buylists with price tracking, multiple saved lists, and bulk operations.",
-      "url": "mtg_card_buylist_app.html",
-      "type": "local"
-    },
-    {
       "title": "🧪 Blobert: Lab Escape Slime",
       "description": "A cozy 2.5D experimental platformer about mutation, physical experimentation, and elastic game feel.",
       "url": "https://github.com/laazer/blobert",
       "type": "external"
+    },
+    {
+      "title": "⚡ LLM-Charge",
+      "description": "TypeScript platform for hybrid local/cloud LLM routing, cost tracking, workflows, and automation—supercharge Ollama and friends while cutting API spend.",
+      "url": "https://github.com/laazer/lllm-charge",
+      "type": "external"
+    },
+    {
+      "title": "🧙 MTG Buylist Builder",
+      "description": "A tool for building and managing Magic: The Gathering card buylists with price tracking, multiple saved lists, and bulk operations.",
+      "url": "mtg_card_buylist_app.html",
+      "type": "local"
     }
   ],
   "blogs": [

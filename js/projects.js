@@ -106,31 +106,49 @@
   }
 
   function loadProjects() {
+    var consumed = false;
+
+    function consume(data) {
+      if (consumed || !data) return;
+      consumed = true;
+      try {
+        window['__profileData'] = data;
+      } catch (e) {
+        /* ignore */
+      }
+      renderProjects(data);
+    }
+
     var shared = window['__profileData'];
-    if (shared && Array.isArray(shared.projects)) {
-      renderProjects(shared);
+    if (shared) {
+      consume(shared);
       return;
     }
+
+    window.addEventListener('laazer:profile', function onProfile(e) {
+      window.removeEventListener('laazer:profile', onProfile);
+      consume(e.detail);
+    });
 
     var href = window.location.href.replace(/[#?].*$/, '');
     var base = href.substring(0, href.lastIndexOf('/') + 1);
     var url = base + 'data/profile.json';
 
-    fetch(url)
+    fetch(url, { cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) throw new Error('Failed to load profile');
         return res.json();
       })
       .then(function (data) {
-        try { window['__profileData'] = data; } catch (e) {}
-        renderProjects(data);
+        consume(data);
       })
       .catch(function (err) {
         console.warn('Projects fetch failed, using inline fallback:', err);
+        if (consumed) return;
         var el = document.getElementById('profile-data');
         if (el && el.textContent) {
           try {
-            renderProjects(JSON.parse(el.textContent));
+            consume(JSON.parse(el.textContent));
           } catch (e) {
             console.error('Profile parse error:', e);
             showError('Unable to load projects.');
