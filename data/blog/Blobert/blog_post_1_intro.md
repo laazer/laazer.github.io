@@ -1,6 +1,6 @@
 ![Caught Blogging](images/caughtblogging.jpeg)
 
-# Blobert: A Completely Reasonable Use of My Free Time
+# Blobert Devlog #1: A Completely Reasonable Use of My Free Time
 
 Every engineer eventually reaches a point where they decide to do something wildly outside their area of expertise.
 

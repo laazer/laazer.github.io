@@ -138,7 +138,7 @@
       "date": "2024/08/24"
     },
     {
-      "title": "Blobert: A Completely Reasonable Use of My Free Time",
+      "title": "Blobert Devlog #1: A Completely Reasonable Use of My Free Time",
       "type": "local",
       "url": "data/blog/Blobert/blog_post_1_intro.md",
       "date": "2026/02/25"
@@ -148,6 +148,12 @@
       "type": "local",
       "url": "data/blog/Blobert/blog_post_2_2d_or_not_2d.md",
       "date": "2026/03/10"
+    },
+    {
+      "title": "Blobert Devlog #3: From 2D Roots to 3D Branches",
+      "type": "local",
+      "url": "data/blog/Blobert/blog_post_3_circle_to_sphere.md",
+      "date": "2026/03/15"
     }
   ]
 }
