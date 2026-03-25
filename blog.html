@@ -10,13 +10,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/glass.css">
-  <link rel="stylesheet" href="css/blog.css?v=4">
+  <link rel="stylesheet" href="css/blog.css?v=6">
   <link rel="shortcut icon" href="images/lzr2-favicon.ico">
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-  <div class="blog-shell">
+  <div class="blog-shell" id="top">
     <header class="blog-nav">
       <a href="index.html#blogs" class="blog-back-link">← Back to all posts</a>
     </header>
@@ -37,6 +37,11 @@
     <div class="blog-bottom-row">
       <a class="blog-bottom-link blog-bottom-link-prev" id="blog-prev" href="#" aria-disabled="true" tabindex="-1">← Previous</a>
       <a class="blog-bottom-link blog-bottom-link-next" id="blog-next" href="#" aria-disabled="true" tabindex="-1">Next →</a>
+    </div>
+
+    <div class="blog-bottom-row blog-bottom-back">
+      <a class="blog-bottom-link" id="blog-back-all" href="index.html#blogs">← Back to all</a>
+      <a class="blog-bottom-link" id="blog-back-top" href="#top">↑ Back to top</a>
     </div>
 
     <div class="blog-bottom-row blog-bottom-series">
@@ -76,6 +81,8 @@
         } catch (e) {
           /* ignore */
         }
+        // Handle common variants like "./data/..." or leading slashes.
+        p = p.replace(/^(?:\.\/)+/, '');
         return p.replace(/^\/+/, '');
       }
 
@@ -199,26 +206,43 @@
           el.classList.add('disabled');
           el.setAttribute('aria-disabled', 'true');
           el.setAttribute('tabindex', '-1');
+          el.removeAttribute('target');
+          el.removeAttribute('rel');
           return;
         }
         el.setAttribute('href', href);
         el.classList.remove('disabled');
         el.setAttribute('aria-disabled', 'false');
         el.removeAttribute('tabindex');
+
+        // If this nav link goes to an external URL, open it in a new tab.
+        if (/^https?:\/\//.test(href)) {
+          el.setAttribute('target', '_blank');
+          el.setAttribute('rel', 'noopener noreferrer');
+        } else {
+          el.removeAttribute('target');
+          el.removeAttribute('rel');
+        }
       }
 
       function computeLocalNav(profile, postUrl) {
         postUrl = normalizePostPath(postUrl);
-        if (!profile || !Array.isArray(profile.blogs) || !postUrl) return null;
+        if (!profile || !Array.isArray(profile.blogs) || !postUrl) {
+          return { seriesName: null, prev: null, next: null, prevSeries: null, nextSeries: null };
+        }
+
+        var allBlogs = profile.blogs.filter(function (b) {
+          return b && typeof b.url === 'string';
+        });
+
         var localBlogs = profile.blogs.filter(function (b) {
           return b && b.type === 'local' && typeof b.url === 'string' && b.url.indexOf('data/blog/') === 0;
         });
-        if (!localBlogs.length) return null;
 
         var seriesName = seriesFromPath(postUrl);
 
         // Overall order by date ascending (oldest -> newest) for prev/next.
-        var overall = localBlogs.slice().sort(function (a, b) {
+        var overall = allBlogs.slice().sort(function (a, b) {
           var ka = parseDateKey(a.date);
           var kb = parseDateKey(b.date);
           var cmp = ka.localeCompare(kb);
@@ -226,15 +250,13 @@
         });
 
         var idx = overall.findIndex(function (b) { return urlsEqual(b.url, postUrl); });
-        if (idx < 0) return null;
-
         var prev = idx > 0 ? overall[idx - 1] : null;
-        var next = idx < overall.length - 1 ? overall[idx + 1] : null;
+        var next = idx >= 0 && idx < overall.length - 1 ? overall[idx + 1] : null;
 
-        // In-series order: same seriesName, also oldest -> newest.
+        // In-series order: same seriesName, also oldest -> newest (local posts only).
         var prevSeries = null;
         var nextSeries = null;
-        if (seriesName) {
+        if (seriesName && localBlogs.length) {
           var seriesBlogs = localBlogs.filter(function (b) {
             return seriesFromPath(b.url) === seriesName;
           }).slice().sort(function (a, b) {
@@ -255,13 +277,7 @@
           }
         }
 
-        return {
-          seriesName: seriesName,
-          prev: prev,
-          next: next,
-          prevSeries: prevSeries,
-          nextSeries: nextSeries
-        };
+        return { seriesName: seriesName, prev: prev, next: next, prevSeries: prevSeries, nextSeries: nextSeries };
       }
 
       function loadPost() {
@@ -299,7 +315,26 @@
         ensureProfileThenMeta().then(function (profile) {
           // If profile failed, ensureProfileThenMeta resolves undefined; keep the simple back link only.
           var nav = computeLocalNav(profile, postPath);
-          if (!nav) return;
+          if (!nav) {
+            if (bottomNavEl) {
+              bottomNavEl.style.display = 'block';
+              bottomNavEl.setAttribute('aria-hidden', 'false');
+            }
+            if (seriesLabelEl) seriesLabelEl.textContent = 'In series';
+            setNavLink(prevEl, null, '← Previous');
+            setNavLink(nextEl, null, 'Next →');
+            setNavLink(prevSeriesEl, null, '← Previous in series');
+            setNavLink(nextSeriesEl, null, 'Next in series →');
+            return;
+          }
+
+          function getNavHref(blog) {
+            if (!blog || !blog.url) return null;
+            if (blog.type === 'local') {
+              return 'blog.html?post=' + encodeURIComponent(blog.url) + '&v=5';
+            }
+            return blog.url;
+          }
 
           if (bottomNavEl) {
             bottomNavEl.style.display = 'block';
@@ -312,23 +347,23 @@
 
           setNavLink(
             prevEl,
-            nav.prev ? ('blog.html?post=' + encodeURIComponent(nav.prev.url)) : null,
+            getNavHref(nav.prev),
             '← Previous'
           );
           setNavLink(
             nextEl,
-            nav.next ? ('blog.html?post=' + encodeURIComponent(nav.next.url)) : null,
+            getNavHref(nav.next),
             'Next →'
           );
 
           setNavLink(
             prevSeriesEl,
-            nav.prevSeries ? ('blog.html?post=' + encodeURIComponent(nav.prevSeries.url)) : null,
+            getNavHref(nav.prevSeries),
             '← Previous in series'
           );
           setNavLink(
             nextSeriesEl,
-            nav.nextSeries ? ('blog.html?post=' + encodeURIComponent(nav.nextSeries.url)) : null,
+            getNavHref(nav.nextSeries),
             'Next in series →'
           );
         });

@@ -113,7 +113,7 @@
     var linkTarget = blog.type === 'local' ? '' : ' target="_blank" rel="noopener noreferrer"';
     var href;
     if (blog.type === 'local') {
-      href = 'blog.html?post=' + encodeURIComponent(blog.url);
+      href = 'blog.html?post=' + encodeURIComponent(blog.url) + '&v=5';
     } else {
       href = blog.url || '#';
     }
