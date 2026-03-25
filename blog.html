@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/glass.css">
-  <link rel="stylesheet" href="css/blog.css">
+  <link rel="stylesheet" href="css/blog.css?v=4">
   <link rel="shortcut icon" href="images/lzr2-favicon.ico">
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -32,12 +32,25 @@
         <p class="blog-loading">Loading post…</p>
       </article>
     </main>
+
+  <div class="blog-bottom-nav glass" id="blog-bottom-nav" aria-hidden="true" style="display:none;">
+    <div class="blog-bottom-row">
+      <a class="blog-bottom-link blog-bottom-link-prev" id="blog-prev" href="#" aria-disabled="true" tabindex="-1">← Previous</a>
+      <a class="blog-bottom-link blog-bottom-link-next" id="blog-next" href="#" aria-disabled="true" tabindex="-1">Next →</a>
+    </div>
+
+    <div class="blog-bottom-row blog-bottom-series">
+      <div class="blog-bottom-series-label" id="blog-series-label">In series</div>
+      <a class="blog-bottom-link blog-bottom-link-prev" id="blog-prev-series" href="#" aria-disabled="true" tabindex="-1">← Previous in series</a>
+      <a class="blog-bottom-link blog-bottom-link-next" id="blog-next-series" href="#" aria-disabled="true" tabindex="-1">Next in series →</a>
+    </div>
+  </div>
   </div>
 
   <script>
     (function () {
       var params = new URLSearchParams(window.location.search);
-      var postPath = params.get('post');
+      var postPath = normalizePostPath(params.get('post'));
       var titleEl = document.getElementById('blog-title');
       var bodyEl = document.getElementById('blog-body');
       var typeBadgeEl = document.getElementById('blog-type-badge');
@@ -54,10 +67,27 @@
         return div.innerHTML;
       }
 
+      /** Decode/normalize ?post= value so it matches profile.json paths (handles encoding + stray slashes). */
+      function normalizePostPath(path) {
+        if (path == null || path === '') return '';
+        var p = String(path).trim();
+        try {
+          p = decodeURIComponent(p);
+        } catch (e) {
+          /* ignore */
+        }
+        return p.replace(/^\/+/, '');
+      }
+
+      function urlsEqual(a, b) {
+        return normalizePostPath(a) === normalizePostPath(b);
+      }
+
       function findBlogMeta(profile, path) {
         if (!profile || !Array.isArray(profile.blogs)) return null;
+        var want = normalizePostPath(path);
         for (var i = 0; i < profile.blogs.length; i++) {
-          if (profile.blogs[i].url === path) return profile.blogs[i];
+          if (urlsEqual(profile.blogs[i].url, want)) return profile.blogs[i];
         }
         return null;
       }
@@ -98,29 +128,140 @@
         }
       }
 
+      /**
+       * Always load fresh profile on this page. Cached window.__profileData from index.html
+       * can be stale (missing posts / old URLs), which breaks prev/next matching.
+       */
       function ensureProfileThenMeta() {
-        var shared = window['__profileData'];
-        if (shared) {
-          setMeta(shared);
-          return Promise.resolve(shared);
-        }
-
         var href = window.location.href.replace(/[#?].*$/, '');
         var base = href.substring(0, href.lastIndexOf('/') + 1);
         var url = base + 'data/profile.json';
 
-        return fetch(url)
+        return fetch(url, { cache: 'no-store' })
           .then(function (res) {
             return res.ok ? res.json() : Promise.reject();
           })
           .then(function (data) {
-            try { window['__profileData'] = data; } catch (e) {}
+            try {
+              window['__profileData'] = data;
+            } catch (e) {
+              /* ignore */
+            }
             setMeta(data);
             return data;
           })
           .catch(function () {
-            // If profile fails, we still render the post content.
+            var shared = window['__profileData'];
+            if (shared) setMeta(shared);
+            return shared;
           });
+      }
+
+      function parseDateKey(dateStr) {
+        if (dateStr == null || dateStr === '') return '00000000';
+        dateStr = String(dateStr).trim();
+        var parts = dateStr.split('/');
+        var y = parseInt(parts[0], 10);
+        if (isNaN(y) || y < 0) return '00000000';
+        var mo = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+        var day = parts.length > 2 ? parseInt(parts[2], 10) : 1;
+        if (isNaN(mo) || isNaN(day)) return '00000000';
+        var ys = String(y).padStart(4, '0');
+        var ms = String(Math.min(12, Math.max(1, mo))).padStart(2, '0');
+        var ds = String(Math.min(31, Math.max(1, day))).padStart(2, '0');
+        return ys + ms + ds;
+      }
+
+      function seriesFromPath(url) {
+        if (!url) return null;
+        if (url.indexOf('data/blog/') !== 0) return null;
+        var rest = url.slice('data/blog/'.length);
+        var parts = rest.split('/');
+        return parts[0] || null;
+      }
+
+      function seriesIndexFromPath(url) {
+        if (!url) return null;
+        // Examples:
+        // - data/blog/Blobert/blog_post_1_intro.md
+        // - data/blog/Blobert/blog_post_3_circle_to_sphere.md
+        var m = url.match(/blog_post_(\d+)/);
+        if (!m) return null;
+        var n = parseInt(m[1], 10);
+        return isNaN(n) ? null : n;
+      }
+
+      function setNavLink(el, href, labelText) {
+        if (!el) return;
+        el.textContent = labelText;
+        if (!href) {
+          el.removeAttribute('href');
+          el.classList.add('disabled');
+          el.setAttribute('aria-disabled', 'true');
+          el.setAttribute('tabindex', '-1');
+          return;
+        }
+        el.setAttribute('href', href);
+        el.classList.remove('disabled');
+        el.setAttribute('aria-disabled', 'false');
+        el.removeAttribute('tabindex');
+      }
+
+      function computeLocalNav(profile, postUrl) {
+        postUrl = normalizePostPath(postUrl);
+        if (!profile || !Array.isArray(profile.blogs) || !postUrl) return null;
+        var localBlogs = profile.blogs.filter(function (b) {
+          return b && b.type === 'local' && typeof b.url === 'string' && b.url.indexOf('data/blog/') === 0;
+        });
+        if (!localBlogs.length) return null;
+
+        var seriesName = seriesFromPath(postUrl);
+
+        // Overall order by date ascending (oldest -> newest) for prev/next.
+        var overall = localBlogs.slice().sort(function (a, b) {
+          var ka = parseDateKey(a.date);
+          var kb = parseDateKey(b.date);
+          var cmp = ka.localeCompare(kb);
+          return cmp !== 0 ? cmp : 0;
+        });
+
+        var idx = overall.findIndex(function (b) { return urlsEqual(b.url, postUrl); });
+        if (idx < 0) return null;
+
+        var prev = idx > 0 ? overall[idx - 1] : null;
+        var next = idx < overall.length - 1 ? overall[idx + 1] : null;
+
+        // In-series order: same seriesName, also oldest -> newest.
+        var prevSeries = null;
+        var nextSeries = null;
+        if (seriesName) {
+          var seriesBlogs = localBlogs.filter(function (b) {
+            return seriesFromPath(b.url) === seriesName;
+          }).slice().sort(function (a, b) {
+            var ia = seriesIndexFromPath(a.url);
+            var ib = seriesIndexFromPath(b.url);
+            if (ia != null && ib != null && ia !== ib) return ia - ib;
+
+            var ka = parseDateKey(a.date);
+            var kb = parseDateKey(b.date);
+            var cmp = ka.localeCompare(kb);
+            return cmp !== 0 ? cmp : 0;
+          });
+
+          var sidx = seriesBlogs.findIndex(function (b) { return urlsEqual(b.url, postUrl); });
+          if (sidx >= 0) {
+            prevSeries = sidx > 0 ? seriesBlogs[sidx - 1] : null;
+            nextSeries = sidx < seriesBlogs.length - 1 ? seriesBlogs[sidx + 1] : null;
+          }
+        }
+
+        return {
+          seriesName: seriesName,
+          prev: prev,
+          next: next,
+          prevSeries: prevSeries,
+          nextSeries: nextSeries
+        };
       }
 
       function loadPost() {
@@ -129,8 +270,14 @@
           return;
         }
 
-        ensureProfileThenMeta();
+        var bottomNavEl = document.getElementById('blog-bottom-nav');
+        var prevEl = document.getElementById('blog-prev');
+        var nextEl = document.getElementById('blog-next');
+        var prevSeriesEl = document.getElementById('blog-prev-series');
+        var nextSeriesEl = document.getElementById('blog-next-series');
+        var seriesLabelEl = document.getElementById('blog-series-label');
 
+        // Render markdown, then (if possible) compute navigation using profile data.
         fetch(postPath)
           .then(function (res) {
             if (!res.ok) throw new Error('Failed to load post.');
@@ -148,6 +295,43 @@
           .catch(function () {
             showError('Unable to load this blog post.');
           });
+
+        ensureProfileThenMeta().then(function (profile) {
+          // If profile failed, ensureProfileThenMeta resolves undefined; keep the simple back link only.
+          var nav = computeLocalNav(profile, postPath);
+          if (!nav) return;
+
+          if (bottomNavEl) {
+            bottomNavEl.style.display = 'block';
+            bottomNavEl.setAttribute('aria-hidden', 'false');
+          }
+
+          if (seriesLabelEl) {
+            seriesLabelEl.textContent = nav.seriesName ? ('In series: ' + nav.seriesName) : 'In series';
+          }
+
+          setNavLink(
+            prevEl,
+            nav.prev ? ('blog.html?post=' + encodeURIComponent(nav.prev.url)) : null,
+            '← Previous'
+          );
+          setNavLink(
+            nextEl,
+            nav.next ? ('blog.html?post=' + encodeURIComponent(nav.next.url)) : null,
+            'Next →'
+          );
+
+          setNavLink(
+            prevSeriesEl,
+            nav.prevSeries ? ('blog.html?post=' + encodeURIComponent(nav.prevSeries.url)) : null,
+            '← Previous in series'
+          );
+          setNavLink(
+            nextSeriesEl,
+            nav.nextSeries ? ('blog.html?post=' + encodeURIComponent(nav.nextSeries.url)) : null,
+            'Next in series →'
+          );
+        });
       }
 
       loadPost();

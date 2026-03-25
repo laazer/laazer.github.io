@@ -134,24 +134,28 @@
     {
       "title": "Piloting Through the Fog: A Tale of Migrating to a New Kubernetes Platform",
       "type": "medium",
+      "series": "blobert-devlogs",
       "url": "https://klaviyo.tech/piloting-through-the-fog-a-tale-of-migrating-to-a-new-kubernetes-platform-7fe5677310fa",
       "date": "2024/08/24"
     },
     {
       "title": "Blobert Devlog #1: A Completely Reasonable Use of My Free Time",
       "type": "local",
+      "series": "blobert-devlogs",
       "url": "data/blog/Blobert/blog_post_1_intro.md",
       "date": "2026/02/25"
     },
     {
       "title": "Blobert Devlog #2: The Time I Thought I Was Making a 3D Game",
       "type": "local",
+      "series": "blobert-devlogs",
       "url": "data/blog/Blobert/blog_post_2_2d_or_not_2d.md",
       "date": "2026/03/10"
     },
     {
       "title": "Blobert Devlog #3: From 2D Roots to 3D Branches",
       "type": "local",
+      "series": "blobert-devlogs",
       "url": "data/blog/Blobert/blog_post_3_circle_to_sphere.md",
       "date": "2026/03/15"
     }
