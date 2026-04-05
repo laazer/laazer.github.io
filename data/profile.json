@@ -158,6 +158,13 @@
       "series": "blobert-devlogs",
       "url": "data/blog/Blobert/blog_post_3_circle_to_sphere.md",
       "date": "2026/03/15"
+    },
+    {
+      "title": "Blobert Devlog #4: Designing the Mutation System (Part 1)",
+      "type": "local",
+      "series": "blobert-devlogs",
+      "url": "data/blog/Blobert/blog_post_4_mutation_pt1.md",
+      "date": "2026/03/22"
     }
   ]
 }

@@ -10,10 +10,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/glass.css">
-  <link rel="stylesheet" href="css/blog.css?v=6">
+  <link rel="stylesheet" href="css/blog.css?v=9">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/tokyo-night-dark.min.css">
   <link rel="shortcut icon" href="images/lzr2-favicon.ico">
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
 </head>
 <body>
   <div class="blog-shell" id="top">
@@ -225,6 +228,264 @@
         }
       }
 
+      var activeMermaidExpand = null;
+
+      function closeMermaidExpand() {
+        if (!activeMermaidExpand) return;
+        var x = activeMermaidExpand;
+        document.body.style.overflow = '';
+        if (x.backdrop && x.backdrop.parentNode) {
+          x.backdrop.parentNode.removeChild(x.backdrop);
+        }
+        if (x.onKey) document.removeEventListener('keydown', x.onKey);
+        if (x.placeholder && x.placeholder.parentNode && x.outer.parentNode === document.body) {
+          x.placeholder.parentNode.insertBefore(x.outer, x.placeholder);
+          x.placeholder.parentNode.removeChild(x.placeholder);
+        }
+        x.outer.classList.remove('blog-mermaid--expanded');
+        var zoomCtlClose = x.outer._mermaidZoom;
+        if (zoomCtlClose && zoomCtlClose.saveCollapsedScale != null) {
+          zoomCtlClose.setScale(zoomCtlClose.saveCollapsedScale);
+          zoomCtlClose.saveCollapsedScale = null;
+        }
+        x.btnExpand.textContent = 'Expand';
+        x.btnExpand.setAttribute('aria-label', 'Expand diagram');
+        activeMermaidExpand = null;
+      }
+
+      /**
+       * Glass panels use backdrop-filter, which creates a fixed-position containing block in
+       * supporting browsers — expanded UI must be reparented to document.body to cover the viewport.
+       */
+      function openMermaidExpand(outer, btnExpand) {
+        closeMermaidExpand();
+        if (!outer.parentNode) return;
+        var placeholder = document.createElement('span');
+        placeholder.className = 'blog-mermaid-placeholder';
+        placeholder.setAttribute('aria-hidden', 'true');
+        placeholder.style.display = 'none';
+        outer.parentNode.insertBefore(placeholder, outer);
+        document.body.appendChild(outer);
+
+        var backdrop = document.createElement('div');
+        backdrop.className = 'blog-mermaid-backdrop';
+        document.body.appendChild(backdrop);
+        outer.classList.add('blog-mermaid--expanded');
+        document.body.style.overflow = 'hidden';
+        var onKey = function (e) {
+          if (e.key === 'Escape') closeMermaidExpand();
+        };
+        document.addEventListener('keydown', onKey);
+        backdrop.addEventListener('click', closeMermaidExpand);
+        btnExpand.textContent = 'Close';
+        btnExpand.setAttribute('aria-label', 'Close diagram');
+        activeMermaidExpand = {
+          outer: outer,
+          backdrop: backdrop,
+          onKey: onKey,
+          btnExpand: btnExpand,
+          placeholder: placeholder
+        };
+        var zoomCtlOpen = outer._mermaidZoom;
+        if (zoomCtlOpen) {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              if (!outer.classList.contains('blog-mermaid--expanded')) return;
+              zoomCtlOpen.applyExpandedFit();
+            });
+          });
+        }
+      }
+
+      function wireMermaidBlock(outer) {
+        var scaleWrap = outer.querySelector('.blog-mermaid-scale');
+        var btnIn = outer.querySelector('[data-mermaid-zoom="in"]');
+        var btnOut = outer.querySelector('[data-mermaid-zoom="out"]');
+        var btnReset = outer.querySelector('[data-mermaid-zoom="reset"]');
+        var btnExpand = outer.querySelector('[data-mermaid-expand]');
+        if (!scaleWrap || !btnIn || !btnOut || !btnReset || !btnExpand) return;
+
+        var DEFAULT_SCALE = 2.0;
+        var scale = DEFAULT_SCALE;
+        var MIN = 0.5;
+        var MAX = 4;
+        var STEP = 1.25;
+
+        function applyScale() {
+          scaleWrap.style.transform = 'scale(' + scale + ')';
+          btnReset.setAttribute(
+            'aria-label',
+            'Reset zoom to default (' + Math.round(DEFAULT_SCALE * 100) + '%), currently ' + Math.round(scale * 100) + '%'
+          );
+        }
+
+        outer._mermaidZoom = {
+          saveCollapsedScale: null,
+          getScale: function () {
+            return scale;
+          },
+          setScale: function (s) {
+            scale = Math.max(MIN, Math.min(MAX, s));
+            applyScale();
+          },
+          applyExpandedFit: function () {
+            if (!outer.classList.contains('blog-mermaid--expanded')) return;
+            var vp = outer.querySelector('.blog-mermaid-viewport');
+            var sw = outer.querySelector('.blog-mermaid-scale');
+            if (!vp || !sw) return;
+            var prevTransform = sw.style.transform;
+            sw.style.transform = 'none';
+            var contentW = sw.offsetWidth || sw.scrollWidth;
+            var contentH = sw.offsetHeight || sw.scrollHeight;
+            sw.style.transform = prevTransform;
+            var pad = 48;
+            var vw = Math.max(1, vp.clientWidth - pad);
+            var vh = Math.max(1, vp.clientHeight - pad);
+            if (contentW < 1 || contentH < 1) return;
+            var fit = Math.min(vw / contentW, vh / contentH, MAX);
+            fit = Math.max(MIN, fit * 0.94);
+            scale = fit;
+            applyScale();
+          }
+        };
+
+        btnIn.addEventListener('click', function () {
+          scale = Math.min(MAX, scale * STEP);
+          applyScale();
+        });
+        btnOut.addEventListener('click', function () {
+          scale = Math.max(MIN, scale / STEP);
+          applyScale();
+        });
+        btnReset.addEventListener('click', function () {
+          scale = DEFAULT_SCALE;
+          applyScale();
+        });
+        btnExpand.addEventListener('click', function () {
+          if (activeMermaidExpand && activeMermaidExpand.outer === outer) {
+            closeMermaidExpand();
+          } else {
+            if (outer._mermaidZoom) {
+              outer._mermaidZoom.saveCollapsedScale = outer._mermaidZoom.getScale();
+            }
+            openMermaidExpand(outer, btnExpand);
+          }
+        });
+        applyScale();
+      }
+
+      /** Turn ```mermaid fences into divs Mermaid can render (marked emits pre > code.language-mermaid). */
+      function prepareMermaidBlocks(root) {
+        var codes = root.querySelectorAll('pre code.language-mermaid');
+        for (var i = 0; i < codes.length; i++) {
+          var codeEl = codes[i];
+          var pre = codeEl.parentNode;
+          if (!pre || pre.tagName !== 'PRE') continue;
+          var graph = codeEl.textContent;
+          var outer = document.createElement('div');
+          outer.className = 'blog-mermaid';
+
+          var toolbar = document.createElement('div');
+          toolbar.className = 'blog-mermaid-toolbar';
+          toolbar.setAttribute('role', 'toolbar');
+          toolbar.setAttribute('aria-label', 'Diagram controls');
+
+          function makeBtn(text, ariaLabel, attrs) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'blog-mermaid-btn';
+            b.textContent = text;
+            b.setAttribute('aria-label', ariaLabel);
+            if (attrs) {
+              for (var k in attrs) {
+                if (Object.prototype.hasOwnProperty.call(attrs, k)) {
+                  b.setAttribute(k, attrs[k]);
+                }
+              }
+            }
+            return b;
+          }
+
+          toolbar.appendChild(makeBtn('−', 'Zoom out', { 'data-mermaid-zoom': 'out' }));
+          toolbar.appendChild(makeBtn('+', 'Zoom in', { 'data-mermaid-zoom': 'in' }));
+          toolbar.appendChild(makeBtn('Reset', 'Reset zoom', { 'data-mermaid-zoom': 'reset' }));
+          toolbar.appendChild(makeBtn('Expand', 'Expand diagram', { 'data-mermaid-expand': 'true' }));
+
+          var viewport = document.createElement('div');
+          viewport.className = 'blog-mermaid-viewport';
+
+          var scaleWrap = document.createElement('div');
+          scaleWrap.className = 'blog-mermaid-scale';
+
+          var inner = document.createElement('div');
+          inner.className = 'mermaid';
+          inner.textContent = graph;
+
+          scaleWrap.appendChild(inner);
+          viewport.appendChild(scaleWrap);
+          outer.appendChild(toolbar);
+          outer.appendChild(viewport);
+          pre.parentNode.replaceChild(outer, pre);
+          wireMermaidBlock(outer);
+        }
+      }
+
+      function highlightBlogCode(root) {
+        if (!window.hljs) return;
+        var codes = root.querySelectorAll('pre code');
+        for (var j = 0; j < codes.length; j++) {
+          var el = codes[j];
+          try {
+            /* Default CDN build has no gdscript; Python is close enough for readability. */
+            if (el.classList.contains('language-gdscript')) {
+              el.classList.remove('language-gdscript');
+              el.classList.add('language-python');
+            }
+            window.hljs.highlightElement(el);
+          } catch (err) {
+            /* unknown or empty language */
+          }
+        }
+      }
+
+      var mermaidInitialized = false;
+
+      function initMermaidOnce() {
+        if (mermaidInitialized || !window.mermaid) return;
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: 'dark',
+          themeVariables: {
+            fontSize: '16px',
+            primaryColor: '#1e3a5f',
+            primaryTextColor: '#e5e7eb',
+            lineColor: '#94a3b8',
+            mainBkg: '#0f172a',
+            nodeBorder: '#38bdf8',
+            clusterBkg: 'rgba(15, 23, 42, 0.55)',
+            titleColor: '#7dd3fc',
+            edgeLabelBackground: '#0f172a',
+            actorBkg: '#1e293b',
+            actorBorder: '#7dd3fc',
+            actorTextColor: '#e5e7eb'
+          }
+        });
+        mermaidInitialized = true;
+      }
+
+      function runMermaidIn(root) {
+        if (!window.mermaid) return;
+        initMermaidOnce();
+        var nodes = root.querySelectorAll('.blog-mermaid .mermaid');
+        if (!nodes.length) return;
+        var runResult = window.mermaid.run({ nodes: nodes });
+        if (runResult && typeof runResult.then === 'function') {
+          runResult.catch(function (e) {
+            console.warn('Mermaid render failed:', e);
+          });
+        }
+      }
+
       function computeLocalNav(profile, postUrl) {
         postUrl = normalizePostPath(postUrl);
         if (!profile || !Array.isArray(profile.blogs) || !postUrl) {
@@ -307,6 +568,9 @@
               html = escapeHtml(markdown);
             }
             bodyEl.innerHTML = html;
+            prepareMermaidBlocks(bodyEl);
+            highlightBlogCode(bodyEl);
+            runMermaidIn(bodyEl);
           })
           .catch(function () {
             showError('Unable to load this blog post.');
