@@ -1,0 +1,453 @@
+/* Résumé page — matches site glass aesthetic + print layout */
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: radial-gradient(ellipse at top, #1e3a5f 0%, #1e293b 50%, #020617 100%);
+  color: var(--text);
+  margin: 0;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(125, 211, 252, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+.resume-shell {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.resume-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  margin-bottom: 24px;
+}
+
+.resume-toolbar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.resume-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.resume-back-link:hover {
+  border-color: var(--accent);
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.resume-download-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(125, 211, 252, 0.4);
+  background: rgba(125, 211, 252, 0.15);
+  color: var(--accent);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resume-download-btn:hover {
+  background: rgba(125, 211, 252, 0.22);
+  border-color: var(--accent);
+  color: #e0f2fe;
+}
+
+.resume-download-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  pointer-events: none;
+}
+
+.resume-document.glass {
+  padding: 40px 44px;
+}
+
+/* PDF capture: letter printable area at 0.2" margins = 8.1" × 10.6", B&W printer–safe */
+.resume-pdf-export-host {
+  position: fixed;
+  left: -20000px;
+  top: 0;
+  width: 8.1in;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.resume-pdf-export-card {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.18in 0.12in;
+  box-sizing: border-box;
+  width: 8.1in;
+  max-width: 8.1in;
+  min-height: 10.6in;
+  color: #111111;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.resume-pdf-export-card .resume-inner {
+  color: #111111;
+}
+
+.resume-pdf-export-card .resume-name {
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: #000000 !important;
+  color: #000000 !important;
+  font-size: 1.65rem;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+}
+
+.resume-pdf-export-card .resume-headline {
+  color: #000000;
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0 0 4px 0;
+}
+
+.resume-pdf-export-card .resume-location {
+  color: #333333;
+  font-size: 0.88rem;
+  margin: 0 0 12px 0;
+}
+
+.resume-pdf-export-card .resume-contact {
+  gap: 6px 14px;
+  margin: 0 0 14px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #000000;
+  font-size: 0.82rem;
+}
+
+.resume-pdf-export-card .resume-contact a {
+  color: #000000;
+  text-decoration: underline;
+}
+
+.resume-pdf-export-card .resume-section-title {
+  margin: 16px 0 8px 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #000000;
+  border-bottom: 1px solid #cccccc;
+  padding-bottom: 4px;
+}
+
+.resume-pdf-export-card .resume-experience-block > .resume-section-title {
+  margin-top: 0;
+}
+
+.resume-pdf-export-card .resume-job {
+  margin-bottom: 12px;
+}
+
+.resume-pdf-export-card .resume-job-company {
+  color: #000000;
+  font-size: 1rem;
+}
+
+.resume-pdf-export-card .resume-job-dates {
+  color: #222222;
+  font-size: 0.78rem;
+}
+
+.resume-pdf-export-card .resume-job-title {
+  color: #111111;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.resume-pdf-export-card .resume-job-location {
+  color: #333333;
+  font-size: 0.78rem;
+}
+
+.resume-pdf-export-card .resume-job-desc {
+  color: #222222;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.resume-pdf-export-card .resume-job li {
+  color: #222222;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-bottom: 3px;
+}
+
+.resume-pdf-export-card .resume-edu-school {
+  color: #000000;
+  font-size: 0.95rem;
+}
+
+.resume-pdf-export-card .resume-edu-degree {
+  color: #222222;
+  font-size: 0.82rem;
+}
+
+.resume-pdf-export-card .resume-edu-dates {
+  color: #333333;
+  font-size: 0.78rem;
+}
+
+.resume-pdf-export-card .resume-project-title a {
+  color: #000000;
+  text-decoration: underline;
+}
+
+.resume-pdf-export-card .resume-project-desc {
+  color: #222222;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.resume-loading,
+.resume-error {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.resume-error {
+  color: #fca5a5;
+}
+
+.resume-inner {
+  color: var(--text);
+}
+
+.resume-name {
+  font-size: 2.25rem;
+  margin: 0 0 6px 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.resume-headline {
+  margin: 0 0 8px 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.resume-location {
+  margin: 0 0 16px 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.resume-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 0 0 28px 0;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  font-size: 0.9rem;
+}
+
+.resume-contact a {
+  color: var(--accent);
+}
+
+.resume-section-title {
+  margin: 28px 0 14px 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.resume-experience-block > .resume-section-title {
+  margin-top: 0;
+}
+
+.resume-experience-block {
+  margin-bottom: 0;
+}
+
+.resume-job {
+  margin-bottom: 22px;
+}
+
+.resume-job:last-child {
+  margin-bottom: 0;
+}
+
+.resume-job-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 6px;
+}
+
+.resume-job-company {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.resume-job-dates {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.resume-job-title {
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.resume-job-location {
+  margin: 0 0 8px 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.resume-job-desc {
+  margin: 0 0 10px 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #cbd5e1;
+}
+
+.resume-job ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.resume-job li {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.resume-job li:last-child {
+  margin-bottom: 0;
+}
+
+.resume-edu-item {
+  margin-bottom: 12px;
+}
+
+.resume-edu-item:last-child {
+  margin-bottom: 0;
+}
+
+.resume-edu-school {
+  margin: 0 0 4px 0;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.resume-edu-degree {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #cbd5e1;
+}
+
+.resume-edu-dates {
+  margin: 4px 0 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.resume-project {
+  margin-bottom: 14px;
+}
+
+.resume-project:last-child {
+  margin-bottom: 0;
+}
+
+.resume-project-title {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.resume-project-title a {
+  color: var(--accent);
+}
+
+.resume-project-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+@media (max-width: 640px) {
+  .resume-document.glass {
+    padding: 24px 20px;
+  }
+
+  .resume-name {
+    font-size: 1.85rem;
+  }
+
+  .resume-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .resume-toolbar-actions {
+    width: 100%;
+  }
+
+  .resume-download-btn {
+    width: 100%;
+  }
+}

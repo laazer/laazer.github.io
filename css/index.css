@@ -212,6 +212,29 @@ body {
   letter-spacing: 0.01em;
 }
 
+.hero-actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Shares .experience-pagination-btn; only native <button> resets + focus ring */
+.hero-resume-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.hero-resume-btn:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
 .section {
   max-width: 1000px;
   margin: 0 auto 64px;
