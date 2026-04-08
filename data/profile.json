@@ -169,6 +169,13 @@
       "series": "blobert-devlogs",
       "url": "data/blog/Blobert/blog_post_4_mutation_pt1.md",
       "date": "2026/03/22"
+    },
+    {
+      "title": "Blobert Devlog #5: Ready, Level 1!",
+      "type": "local",
+      "series": "blobert-devlogs",
+      "url": "data/blog/Blobert/blog_post_5_ready_level_1.md",
+      "date": "2026/03/29"
     }
   ]
 }

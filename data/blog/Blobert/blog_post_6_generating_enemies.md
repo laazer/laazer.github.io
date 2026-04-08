@@ -1,1 +1,1 @@
-# Blobert Devlog #6: Generating Enemies
+# Blobert Devlog #6: Generating Enemies, 3D Modeling Purely with Code
