@@ -195,4 +195,4 @@ Level 1 is finally unblocked.
 
 Now I can spend time building gameplay instead of fighting the wiring (lol, but wouldn't that be cool?).
 
-<img src="images/Blobert/post_5/level1_run.gif" alt="Ready for Level 1 GIF" style="width:700px;"/>
+<img src="images/Blobert/post_5/level1_run.gif" alt="Level 1 Playthrough GIF" style="width:700px;"/>

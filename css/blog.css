@@ -243,8 +243,6 @@ body > * {
 
 .blog-mermaid-scale {
   display: inline-block;
-  transform-origin: top center;
-  transition: transform 0.12s ease-out;
   vertical-align: top;
 }
 

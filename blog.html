@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/glass.css">
-  <link rel="stylesheet" href="css/blog.css?v=9">
+  <link rel="stylesheet" href="css/blog.css?v=11">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/tokyo-night-dark.min.css">
   <link rel="shortcut icon" href="images/lzr2-favicon.ico">
 
@@ -299,20 +299,21 @@
 
       function wireMermaidBlock(outer) {
         var scaleWrap = outer.querySelector('.blog-mermaid-scale');
+        var viewport = outer.querySelector('.blog-mermaid-viewport');
         var btnIn = outer.querySelector('[data-mermaid-zoom="in"]');
         var btnOut = outer.querySelector('[data-mermaid-zoom="out"]');
         var btnReset = outer.querySelector('[data-mermaid-zoom="reset"]');
         var btnExpand = outer.querySelector('[data-mermaid-expand]');
-        if (!scaleWrap || !btnIn || !btnOut || !btnReset || !btnExpand) return;
+        if (!scaleWrap || !viewport || !btnIn || !btnOut || !btnReset || !btnExpand) return;
 
-        var DEFAULT_SCALE = 2.0;
+        var DEFAULT_SCALE = 1.0;
         var scale = DEFAULT_SCALE;
-        var MIN = 0.5;
-        var MAX = 4;
+        var MIN = 0.05;
+        var MAX = 20;
         var STEP = 1.25;
 
         function applyScale() {
-          scaleWrap.style.transform = 'scale(' + scale + ')';
+          scaleWrap.style.zoom = scale;
           btnReset.setAttribute(
             'aria-label',
             'Reset zoom to default (' + Math.round(DEFAULT_SCALE * 100) + '%), currently ' + Math.round(scale * 100) + '%'
@@ -333,11 +334,10 @@
             var vp = outer.querySelector('.blog-mermaid-viewport');
             var sw = outer.querySelector('.blog-mermaid-scale');
             if (!vp || !sw) return;
-            var prevTransform = sw.style.transform;
-            sw.style.transform = 'none';
+            // Reset zoom to measure natural content dimensions
+            sw.style.zoom = '';
             var contentW = sw.offsetWidth || sw.scrollWidth;
             var contentH = sw.offsetHeight || sw.scrollHeight;
-            sw.style.transform = prevTransform;
             var pad = 48;
             var vw = Math.max(1, vp.clientWidth - pad);
             var vh = Math.max(1, vp.clientHeight - pad);
@@ -371,6 +371,13 @@
             openMermaidExpand(outer, btnExpand);
           }
         });
+        viewport.addEventListener('wheel', function (e) {
+          if (!e.ctrlKey && !e.metaKey) return;
+          e.preventDefault();
+          var dir = e.deltaY < 0 ? STEP : (1 / STEP);
+          scale = Math.max(MIN, Math.min(MAX, scale * dir));
+          applyScale();
+        }, { passive: false });
         applyScale();
       }
 
@@ -595,7 +602,7 @@
           function getNavHref(blog) {
             if (!blog || !blog.url) return null;
             if (blog.type === 'local') {
-              return 'blog.html?post=' + encodeURIComponent(blog.url) + '&v=5';
+              return 'blog.html?post=' + encodeURIComponent(blog.url) + '&v=6';
             }
             return blog.url;
           }
