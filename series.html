@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Series - Laazer</title>
+  <meta name="description" content="Blog posts organized by series" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/glass.css">
+  <link rel="stylesheet" href="css/series.css">
+  <link rel="shortcut icon" href="images/lzr2-favicon.ico">
+</head>
+<body>
+  <div class="series-shell">
+    <header class="series-nav">
+      <a href="index.html#blogs" class="series-back-link">← Back to all posts</a>
+    </header>
+
+    <header class="series-page-header glass">
+      <h1 class="series-page-title">Blog Series</h1>
+      <p class="series-page-subtitle">Posts organized by series — click a series to browse its entries</p>
+    </header>
+
+    <main id="series-root">
+      <p class="series-loading">Loading series…</p>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById('series-root');
+
+      function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = String(text);
+        return div.innerHTML;
+      }
+
+      function formatSeriesName(slug) {
+        return slug.split('-').map(function (w) {
+          return w.charAt(0).toUpperCase() + w.slice(1);
+        }).join(' ');
+      }
+
+      function parseDateKey(dateStr) {
+        if (!dateStr) return '00000000';
+        var parts = String(dateStr).trim().split('/');
+        var y = parseInt(parts[0], 10);
+        if (isNaN(y)) return '00000000';
+        var mo = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+        var day = parts.length > 2 ? parseInt(parts[2], 10) : 1;
+        return String(y).padStart(4, '0') +
+          String(Math.min(12, Math.max(1, mo))).padStart(2, '0') +
+          String(Math.min(31, Math.max(1, day))).padStart(2, '0');
+      }
+
+      function seriesIndexFromPath(url) {
+        if (!url) return null;
+        var m = String(url).match(/blog_post_(\d+)/);
+        if (!m) return null;
+        var n = parseInt(m[1], 10);
+        return isNaN(n) ? null : n;
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return '';
+        var parts = String(dateStr).split('/');
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var y = parseInt(parts[0], 10);
+        var mo = parts.length > 1 ? parseInt(parts[1], 10) - 1 : 0;
+        var day = parts.length > 2 ? parseInt(parts[2], 10) : 1;
+        if (isNaN(y)) return dateStr;
+        return months[Math.max(0, Math.min(11, mo))] + ' ' + day + ', ' + y;
+      }
+
+      function getPostHref(blog) {
+        if (blog.type === 'local') {
+          return 'blog.html?post=' + encodeURIComponent(blog.url) + '&v=5';
+        }
+        return blog.url || '#';
+      }
+
+      function toggleCard(card, btn) {
+        var isOpen = card.classList.contains('open');
+        card.classList.toggle('open', !isOpen);
+        btn.setAttribute('aria-expanded', String(!isOpen));
+      }
+
+      function render(profile) {
+        var blogs = (profile && Array.isArray(profile.blogs)) ? profile.blogs : [];
+
+        // Group blogs by series, preserving first-seen order.
+        var seriesMap = Object.create(null);
+        var seriesOrder = [];
+        blogs.forEach(function (blog) {
+          var s = blog.series;
+          if (!s) return;
+          if (!seriesMap[s]) {
+            seriesMap[s] = [];
+            seriesOrder.push(s);
+          }
+          seriesMap[s].push(blog);
+        });
+
+        if (seriesOrder.length === 0) {
+          root.innerHTML = '<p class="series-empty">No series found.</p>';
+          return;
+        }
+
+        // Sort series: most recently active (latest post date) first.
+        seriesOrder.sort(function (a, b) {
+          var latestA = seriesMap[a].reduce(function (best, p) {
+            var k = parseDateKey(p.date);
+            return k > best ? k : best;
+          }, '00000000');
+          var latestB = seriesMap[b].reduce(function (best, p) {
+            var k = parseDateKey(p.date);
+            return k > best ? k : best;
+          }, '00000000');
+          return latestB.localeCompare(latestA);
+        });
+
+        var fragment = document.createDocumentFragment();
+
+        seriesOrder.forEach(function (slug) {
+          var posts = seriesMap[slug].slice().sort(function (a, b) {
+            var ia = seriesIndexFromPath(a.url);
+            var ib = seriesIndexFromPath(b.url);
+            if (ia != null && ib != null && ia !== ib) return ia - ib;
+            return parseDateKey(a.date).localeCompare(parseDateKey(b.date));
+          });
+
+          var card = document.createElement('div');
+          card.className = 'series-card glass';
+
+          // Header button
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'series-card-header';
+          btn.setAttribute('aria-expanded', 'false');
+          btn.setAttribute('aria-label', 'Toggle ' + formatSeriesName(slug) + ' series');
+
+          var titleRow = document.createElement('div');
+          titleRow.className = 'series-card-title-row';
+
+          var nameEl = document.createElement('span');
+          nameEl.className = 'series-card-name';
+          nameEl.textContent = formatSeriesName(slug);
+
+          var countEl = document.createElement('span');
+          countEl.className = 'series-post-count';
+          countEl.textContent = posts.length + ' post' + (posts.length === 1 ? '' : 's');
+
+          titleRow.appendChild(nameEl);
+          titleRow.appendChild(countEl);
+
+          var chevron = document.createElement('span');
+          chevron.className = 'series-chevron';
+          chevron.setAttribute('aria-hidden', 'true');
+          chevron.textContent = '▼';
+
+          btn.appendChild(titleRow);
+          btn.appendChild(chevron);
+
+          // Posts list
+          var list = document.createElement('div');
+          list.className = 'series-posts-list';
+          list.setAttribute('role', 'list');
+
+          posts.forEach(function (post, idx) {
+            var href = getPostHref(post);
+            var isExternal = post.type !== 'local';
+
+            var item = document.createElement('a');
+            item.className = 'series-post-item';
+            item.href = href;
+            item.setAttribute('role', 'listitem');
+            if (isExternal) {
+              item.target = '_blank';
+              item.rel = 'noopener noreferrer';
+            }
+
+            var numEl = document.createElement('span');
+            numEl.className = 'series-post-num';
+            numEl.textContent = idx + 1;
+
+            var body = document.createElement('span');
+            body.className = 'series-post-body';
+
+            var titleSpan = document.createElement('span');
+            titleSpan.className = 'series-post-title';
+            titleSpan.textContent = post.title || '(untitled)';
+
+            var meta = document.createElement('span');
+            meta.className = 'series-post-meta';
+
+            if (post.date) {
+              var dateEl = document.createElement('span');
+              dateEl.className = 'series-post-date';
+              dateEl.textContent = formatDate(post.date);
+              meta.appendChild(dateEl);
+            }
+
+            if (isExternal && post.type) {
+              var badge = document.createElement('span');
+              badge.className = 'series-post-type-badge';
+              badge.textContent = post.type.charAt(0).toUpperCase() + post.type.slice(1);
+              meta.appendChild(badge);
+            }
+
+            body.appendChild(titleSpan);
+            body.appendChild(meta);
+
+            var arrow = document.createElement('span');
+            arrow.className = 'series-post-arrow';
+            arrow.setAttribute('aria-hidden', 'true');
+            arrow.textContent = '→';
+
+            item.appendChild(numEl);
+            item.appendChild(body);
+            item.appendChild(arrow);
+            list.appendChild(item);
+          });
+
+          btn.addEventListener('click', function () { toggleCard(card, btn); });
+          card.appendChild(btn);
+          card.appendChild(list);
+          fragment.appendChild(card);
+        });
+
+        root.innerHTML = '';
+        root.appendChild(fragment);
+
+        // Auto-open if there is only one series.
+        if (seriesOrder.length === 1) {
+          var firstCard = root.querySelector('.series-card');
+          var firstBtn = root.querySelector('.series-card-header');
+          if (firstCard && firstBtn) {
+            firstCard.classList.add('open');
+            firstBtn.setAttribute('aria-expanded', 'true');
+          }
+        }
+      }
+
+      // Fetch profile
+      var pageHref = window.location.href.replace(/[#?].*$/, '');
+      var base = pageHref.substring(0, pageHref.lastIndexOf('/') + 1);
+      fetch(base + 'data/profile.json', { cache: 'no-store' })
+        .then(function (res) {
+          if (!res.ok) throw new Error('Failed to load');
+          return res.json();
+        })
+        .then(render)
+        .catch(function () {
+          root.innerHTML = '<p class="series-error">Unable to load series data.</p>';
+        });
+    })();
+  </script>
+</body>
+</html>
