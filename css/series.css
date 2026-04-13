@@ -70,18 +70,11 @@ body > * {
 
 .series-page-title {
   font-size: 2rem;
-  margin: 0 0 4px 0;
+  margin: 0;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.series-page-subtitle {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.5;
 }
 
 /* ── Series cards ── */

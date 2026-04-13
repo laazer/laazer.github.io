@@ -21,7 +21,6 @@
 
     <header class="series-page-header glass">
       <h1 class="series-page-title">Blog Series</h1>
-      <p class="series-page-subtitle">Posts organized by series — click a series to browse its entries</p>
     </header>
 
     <main id="series-root">
@@ -32,6 +31,31 @@
   <script>
     (function () {
       var root = document.getElementById('series-root');
+      var params = new URLSearchParams(window.location.search);
+
+      function normalizeSeriesQuery(raw) {
+        if (raw == null || raw === '') return '';
+        var s = String(raw).trim();
+        try {
+          s = decodeURIComponent(s);
+        } catch (e) {
+          /* ignore */
+        }
+        return s;
+      }
+
+      function resolveSeriesSlug(wanted, seriesOrder) {
+        if (!wanted || !seriesOrder || !seriesOrder.length) return null;
+        var i;
+        for (i = 0; i < seriesOrder.length; i++) {
+          if (seriesOrder[i] === wanted) return seriesOrder[i];
+        }
+        var lower = wanted.toLowerCase();
+        for (i = 0; i < seriesOrder.length; i++) {
+          if (String(seriesOrder[i]).toLowerCase() === lower) return seriesOrder[i];
+        }
+        return null;
+      }
 
       function escapeHtml(text) {
         var div = document.createElement('div');
@@ -136,6 +160,7 @@
 
           var card = document.createElement('div');
           card.className = 'series-card glass';
+          card.setAttribute('data-series', slug);
 
           // Header button
           var btn = document.createElement('button');
@@ -235,8 +260,31 @@
         root.innerHTML = '';
         root.appendChild(fragment);
 
-        // Auto-open if there is only one series.
-        if (seriesOrder.length === 1) {
+        var seriesWanted = normalizeSeriesQuery(params.get('series'));
+        var resolvedSlug = resolveSeriesSlug(seriesWanted, seriesOrder);
+
+        function openCardBySlug(slug) {
+          if (!slug) return;
+          var cards = root.querySelectorAll('.series-card');
+          for (var c = 0; c < cards.length; c++) {
+            if (cards[c].getAttribute('data-series') !== slug) continue;
+            var cardEl = cards[c];
+            var hdr = cardEl.querySelector('.series-card-header');
+            if (!hdr) return;
+            cardEl.classList.add('open');
+            hdr.setAttribute('aria-expanded', 'true');
+            requestAnimationFrame(function () {
+              cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            document.title = formatSeriesName(slug) + ' - Blog Series - Laazer';
+            return;
+          }
+        }
+
+        if (resolvedSlug) {
+          openCardBySlug(resolvedSlug);
+        } else if (seriesOrder.length === 1) {
+          // Auto-open if there is only one series.
           var firstCard = root.querySelector('.series-card');
           var firstBtn = root.querySelector('.series-card-header');
           if (firstCard && firstBtn) {
