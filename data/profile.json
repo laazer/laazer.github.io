@@ -142,6 +142,13 @@
   ],
   "blogs": [
     {
+      "title": "Blobert Devlog #7: Generating Enemies Part 2: Yes, I'm still crazy...",
+      "type": "local",
+      "series": "blobert-devlogs",
+      "url": "data/blog/Blobert/blog_post_7_generating_enemies_pt2.md",
+      "date": "2026/05/14"
+    },
+    {
       "title": "Piloting Through the Fog: A Tale of Migrating to a New Kubernetes Platform",
       "type": "medium",
       "series": "Misc.",
