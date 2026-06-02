@@ -391,5 +391,47 @@ img {
   .blog-title-main {
     font-size: 1.9rem;
   }
+
+  .blog-mermaid {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+  }
+
+  .blog-header.glass,
+  .blog-content.glass {
+    padding: 16px 14px;
+  }
+
+  .blog-title-main {
+    font-size: 1.6rem;
+  }
+
+  .blog-meta {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .blog-mermaid {
+    min-height: 220px;
+    padding: 12px 10px 14px;
+  }
+
+  .blog-mermaid-viewport {
+    min-height: 180px;
+  }
+
+  .blog-bottom-series {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-bottom-link {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
 }
 

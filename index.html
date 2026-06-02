@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/glass.css">
   <link rel="stylesheet" href="css/index.css">
   <link rel="shortcut icon" href="images/lzr2-favicon.ico">
+  <script src="js/brand.js"></script>
 </head>
 <body>
 
@@ -19,7 +20,12 @@
   <nav class="navbar glass">
     <div class="navbar-timeline">
       <a href="#" class="navbar-brand">Laazer</a>
-      <ul class="navbar-menu">
+      <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navbar-menu">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+      <ul class="navbar-menu" id="navbar-menu">
         <li class="navbar-item">
           <a href="#about" class="navbar-link">
             <span class="navbar-dot"></span>
@@ -164,5 +170,28 @@
   <script src="js/profile.js?v=3"></script>
   <script src="js/projects.js?v=2"></script>
   <script src="js/blogs.js?v=4"></script>
+  <script>
+    (function () {
+      var btn = document.getElementById('navbar-hamburger');
+      var menu = document.getElementById('navbar-menu');
+      if (!btn || !menu) return;
+      btn.addEventListener('click', function () {
+        var open = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+      menu.querySelectorAll('.navbar-link').forEach(function (link) {
+        link.addEventListener('click', function () {
+          menu.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+      document.addEventListener('click', function (e) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
