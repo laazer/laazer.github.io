@@ -17,6 +17,8 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
+  <script src="js/placeholders/icons.js"></script>
+  <script src="js/media-slot.js"></script>
 </head>
 <body>
   <div class="blog-shell" id="top">
@@ -568,6 +570,8 @@
             return res.text();
           })
           .then(function (markdown) {
+            // Custom elements cannot be self-closing in HTML; normalise <media-slot ... /> before parsing.
+            markdown = markdown.replace(/<media-slot([^>]*?)\/>/g, '<media-slot$1></media-slot>');
             var html = '';
             try {
               html = window.marked ? window.marked.parse(markdown) : escapeHtml(markdown);

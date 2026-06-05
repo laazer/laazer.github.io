@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" color="#5b5963" role="img" aria-label="Glitch Thumbnail">
+  <title>Glitch Thumbnail</title>
+  <g stroke="currentColor"><rect x="12" y="14" width="40" height="36" rx="5"></rect></g>
+  <g>
+  <rect x="17" y="22" width="22" height="3.4" rx="1" fill="currentColor" stroke="none" opacity="0.42"></rect>
+  <rect x="22" y="28" width="26" height="3.4" rx="1" fill="#c8822f" stroke="none"></rect>
+  <rect x="16" y="34" width="20" height="3.4" rx="1" fill="currentColor" stroke="none" opacity="0.42"></rect>
+  <rect x="20" y="40" width="24" height="3.4" rx="1" fill="currentColor" stroke="none" opacity="0.42"></rect>
+  </g>
+</svg>

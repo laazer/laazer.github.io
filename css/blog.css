@@ -378,6 +378,13 @@ img {
   height: auto;
 }
 
+.blog-body media-slot {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1.5em auto;
+}
+
 @media (max-width: 768px) {
   body {
     padding: 16px;

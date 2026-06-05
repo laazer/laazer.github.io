@@ -133,6 +133,12 @@
       "type": "local"
     },
     {
+      "title": "🌐 This Website",
+      "description": "This website you are currently on. Built with HTML, CSS, and JavaScript.",
+      "url": "https://github.com/laazer/laazer.github.io",
+      "type": "external"
+    },
+    {
       "title": "🌤️ Weather Powered Email",
       "description": "An old portfolio project that sends daily weather reports to my inbox. Built before AI was a thing.",
       "url": "https://github.com/laazer/WeatherPoweredEmail",
@@ -140,13 +146,6 @@
     }
   ],
   "blogs": [
-    {
-      "title": "Blobert Devlog #7: Generating Enemies Part 2: Yes, I'm still crazy...",
-      "type": "local",
-      "series": "blobert-devlogs",
-      "url": "data/blog/Blobert/blog_post_7_generating_enemies_pt2.md",
-      "date": "2026/05/14"
-    },
     {
       "title": "Piloting Through the Fog: A Tale of Migrating to a New Kubernetes Platform",
       "type": "medium",
@@ -195,6 +194,20 @@
       "series": "blobert-devlogs",
       "url": "data/blog/Blobert/blog_post_6_generating_enemies.md",
       "date": "2026/04/04"
+    },
+    {
+      "title": "Blobert Devlog #7: Generating Enemies Part 2: Yes, I'm still crazy...",
+      "type": "local",
+      "series": "blobert-devlogs",
+      "url": "data/blog/Blobert/blog_post_7_generating_enemies_pt2.md",
+      "date": "2026/05/14"
+    },
+    {
+      "title": "Blobert Devlog #8: Generating Enemies Part 3: Its Purdy Now + Game Update (Yay!)",
+      "type": "local",
+      "series": "blobert-devlogs",
+      "url": "data/blog/Blobert/blog_post_8_generating_enemies_pt3.md",
+      "date": "2026/06/05"
     }
   ]
 }

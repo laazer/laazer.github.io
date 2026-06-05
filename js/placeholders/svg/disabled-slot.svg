@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" color="#5b5963" role="img" aria-label="Disabled Image Slot">
+  <title>Disabled Image Slot</title>
+  <rect x="12" y="14" width="40" height="36" rx="5" stroke="currentColor" opacity="0.42" stroke-dasharray="4 4"></rect>
+  <line x1="17" y1="47" x2="47" y2="17" stroke="currentColor"></line>
+</svg>

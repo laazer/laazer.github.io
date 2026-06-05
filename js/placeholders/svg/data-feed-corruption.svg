@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" color="#5b5963" role="img" aria-label="Data Feed Corruption">
+  <title>Data Feed Corruption</title>
+  <g stroke="#1fa6bd" stroke-width="1.9">
+  <polyline points="14 21 14 14 21 14"></polyline>
+  <polyline points="43 14 50 14 50 21"></polyline>
+  <polyline points="50 43 50 50 43 50"></polyline>
+  <polyline points="21 50 14 50 14 43"></polyline>
+  </g>
+  <g stroke="#1fa6bd" stroke-width="1.9">
+  <line x1="20" y1="23" x2="44" y2="23"></line>
+  <line x1="20" y1="27" x2="44" y2="27"></line>
+  <line x1="20" y1="31" x2="40" y2="31"></line>
+  </g>
+  <g stroke="#cc5aa0" stroke-width="1.9">
+  <line x1="25" y1="37" x2="42" y2="37"></line>
+  <line x1="20" y1="41" x2="31" y2="41"></line>
+  <line x1="35" y1="41" x2="45" y2="41"></line>
+  <line x1="23" y1="45" x2="34" y2="45" opacity="0.42"></line>
+  </g>
+</svg>

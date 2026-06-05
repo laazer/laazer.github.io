@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" color="#5b5963" role="img" aria-label="Broken Frame">
+  <title>Broken Frame</title>
+  <g stroke="currentColor">
+  <rect x="12" y="14" width="40" height="36" rx="5"></rect>
+  <circle cx="21" cy="25" r="3"></circle>
+  <polyline points="15 47 24 36 30 42 37 32 49 47"></polyline>
+  </g>
+  <polyline points="34 11 31 27 39 33 33 53" stroke="#c8822f"></polyline>
+</svg>
