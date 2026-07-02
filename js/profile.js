@@ -124,26 +124,28 @@
   }
 
   function renderExperience(data) {
-    publishProfileData(data);
+    // Redact personal details for non-jbrandt.dev visitors.
+    var filteredData = window.ReferrerGate ? window.ReferrerGate.filterProfileData(data) : data;
+    publishProfileData(filteredData);
 
     if (!root) {
       return;
     }
 
-    if (!data.experience || !Array.isArray(data.experience)) {
+    if (!filteredData.experience || !Array.isArray(filteredData.experience)) {
       showError('Unable to load experience.');
       return;
     }
-    allJobs = data.experience;
+    allJobs = filteredData.experience;
     currentPage = 1;
     showAll = false;
     render();
 
-    if (data.contact) {
+    if (filteredData.contact) {
       var contactSection = document.querySelector('.contact-info');
-      if (contactSection && data.contact.linkedIn) {
+      if (contactSection && filteredData.contact.linkedIn) {
         var link = contactSection.querySelector('a[href*="linkedin"]');
-        if (link) link.setAttribute('href', data.contact.linkedIn);
+        if (link) link.setAttribute('href', filteredData.contact.linkedIn);
       }
     }
   }

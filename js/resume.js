@@ -151,8 +151,10 @@
   }
 
   function render(data) {
-    resumeProfile = data;
-    var c = data.contact || {};
+    // Redact personal details for non-jbrandt.dev visitors.
+    var filteredData = window.ReferrerGate ? window.ReferrerGate.filterProfileData(data) : data;
+    resumeProfile = filteredData;
+    var c = filteredData.contact || {};
     pdfContactName = c.name || '';
     document.title = (c.name || 'Laazer') + ' — Résumé';
 
@@ -165,9 +167,9 @@
       body += '<p class="resume-location">' + escapeHtml(c.location) + '</p>';
     }
     body += renderContact(c);
-    body += renderExperience(data.experience);
-    body += renderEducation(data.education);
-    body += renderProjects(data.projects);
+    body += renderExperience(filteredData.experience);
+    body += renderEducation(filteredData.education);
+    body += renderProjects(filteredData.projects);
 
     root.innerHTML = '<div class="resume-inner">' + body + '</div>';
   }

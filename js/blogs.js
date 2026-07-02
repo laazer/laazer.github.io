@@ -270,7 +270,11 @@
       } catch (e) {
         /* ignore */
       }
-      renderBlogs(data.blogs);
+      // Redact employer-specific posts when not on jbrandt.dev. Applied here too
+      // (not just via the shared profile data) because this module may win the
+      // race with its own unfiltered fetch of profile.json.
+      var blogs = window['ReferrerGate'] ? window['ReferrerGate'].filterBlogs(data.blogs) : data.blogs;
+      renderBlogs(blogs);
     }
 
     var shared = window['__profileData'];
