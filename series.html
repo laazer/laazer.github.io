@@ -8,19 +8,58 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=VT323&family=Space+Mono:wght@400;700&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/glass.css">
   <link rel="stylesheet" href="css/series.css">
+  <link rel="stylesheet" href="css/brandtos.css">
+  <link rel="stylesheet" href="css/brandtos-pages.css">
   <link rel="shortcut icon" href="images/lzr2-favicon.ico">
 </head>
-<body>
-  <div class="series-shell">
-    <header class="series-nav">
-      <a href="index.html#blogs" class="series-back-link">← Back to all posts</a>
-    </header>
+<body class="brandtos">
 
-    <header class="series-page-header glass">
-      <h1 class="series-page-title">Blog Series</h1>
+  <!-- Menu bar (BrandtOS) -->
+  <nav class="navbar">
+    <div class="navbar-timeline">
+      <span class="menubar-logo">◆</span>
+      <a href="index.html" class="navbar-brand">Laazer</a>
+      <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navbar-menu">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+      <ul class="navbar-menu" id="navbar-menu">
+        <li class="navbar-item"><a href="index.html#about" class="navbar-link"><span class="navbar-label">About</span></a></li>
+        <li class="navbar-item"><a href="index.html#experience" class="navbar-link"><span class="navbar-label">Experience</span></a></li>
+        <li class="navbar-item"><a href="index.html#projects" class="navbar-link"><span class="navbar-label">Projects</span></a></li>
+        <li class="navbar-item"><a href="index.html#blogs" class="navbar-link"><span class="navbar-label">Blog</span></a></li>
+        <li class="navbar-item"><a href="index.html#contact" class="navbar-link"><span class="navbar-label">Contact</span></a></li>
+      </ul>
+      <span class="menubar-clock"><span>🔋</span><span id="menubar-time">9:41 AM</span></span>
+    </div>
+  </nav>
+
+  <!-- Desktop dock -->
+  <div class="dock" aria-hidden="true">
+    <a href="index.html#experience" class="dock-item"><span class="dock-icon i-work">📁</span><span class="dock-label">work</span></a>
+    <a href="index.html#projects" class="dock-item"><span class="dock-icon i-blob">🧪</span><span class="dock-label">blobert</span></a>
+    <a href="index.html#blogs" class="dock-item"><span class="dock-icon i-term">▮</span><span class="dock-label">blog</span></a>
+    <a href="index.html#contact" class="dock-item"><span class="dock-icon i-trash">✉</span><span class="dock-label">contact</span></a>
+  </div>
+
+  <div class="series-shell">
+    <div class="series-nav">
+      <a href="index.html#blogs" class="series-back-link">← Back to all posts</a>
+    </div>
+
+    <header class="series-page-header glass win">
+      <div class="win-bar">
+        <span class="light r"></span><span class="light y"></span><span class="light g"></span>
+        <span class="win-title t-pink">series/</span>
+        <span class="win-hint">ls</span>
+      </div>
+      <div class="win-body">
+        <h1 class="series-page-title">Blog Series</h1>
+      </div>
     </header>
 
     <main id="series-root">
@@ -306,6 +345,37 @@
         .catch(function () {
           root.innerHTML = '<p class="series-error">Unable to load series data.</p>';
         });
+    })();
+  </script>
+
+  <!-- BrandtOS chrome: live clock + mobile menu -->
+  <script>
+    (function () {
+      var timeEl = document.getElementById('menubar-time');
+      if (timeEl) {
+        var tick = function () {
+          var d = new Date();
+          var h = d.getHours(), m = d.getMinutes();
+          var ampm = h >= 12 ? 'PM' : 'AM';
+          h = h % 12; if (h === 0) h = 12;
+          timeEl.textContent = h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
+        };
+        tick();
+        setInterval(tick, 15000);
+      }
+      var btn = document.getElementById('navbar-hamburger');
+      var menu = document.getElementById('navbar-menu');
+      if (!btn || !menu) return;
+      btn.addEventListener('click', function () {
+        var open = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+      document.addEventListener('click', function (e) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
     })();
   </script>
 </body>

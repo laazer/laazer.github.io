@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laazer - Software Developer</title>
   <meta name="description" content="Software Developer" />
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/glass.css">
-  <link rel="stylesheet" href="css/index.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=VT323&family=Space+Mono:wght@400;700&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/brandtos.css">
   <link rel="shortcut icon" href="images/lzr2-favicon.ico">
 </head>
-<body>
+<body class="brandtos">
 
-  <!-- Navigation Bar -->
-  <nav class="navbar glass">
+  <!-- Menu bar (BrandtOS) -->
+  <nav class="navbar">
     <div class="navbar-timeline">
+      <span class="menubar-logo">◆</span>
       <a href="#" class="navbar-brand">Laazer</a>
       <button class="navbar-hamburger" id="navbar-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navbar-menu">
         <span class="hamburger-bar"></span>
@@ -25,105 +25,142 @@
         <span class="hamburger-bar"></span>
       </button>
       <ul class="navbar-menu" id="navbar-menu">
-        <li class="navbar-item">
-          <a href="#about" class="navbar-link">
-            <span class="navbar-dot"></span>
-            <span class="navbar-label">About</span>
-          </a>
-        </li>
-        <li class="navbar-item">
-          <a href="#experience" class="navbar-link">
-            <span class="navbar-dot"></span>
-            <span class="navbar-label">Experience</span>
-          </a>
-        </li>
-        <li class="navbar-item">
-          <a href="#projects" class="navbar-link">
-            <span class="navbar-dot"></span>
-            <span class="navbar-label">Projects</span>
-          </a>
-        </li>
-        <li class="navbar-item">
-          <a href="#blogs" class="navbar-link">
-            <span class="navbar-dot"></span>
-            <span class="navbar-label">Blog</span>
-          </a>
-        </li>
-        <li class="navbar-item">
-          <a href="#contact" class="navbar-link">
-            <span class="navbar-dot"></span>
-            <span class="navbar-label">Contact</span>
-          </a>
-        </li>
+        <li class="navbar-item"><a href="#about" class="navbar-link"><span class="navbar-dot"></span><span class="navbar-label">About</span></a></li>
+        <li class="navbar-item"><a href="#experience" class="navbar-link"><span class="navbar-dot"></span><span class="navbar-label">Experience</span></a></li>
+        <li class="navbar-item"><a href="#projects" class="navbar-link"><span class="navbar-dot"></span><span class="navbar-label">Projects</span></a></li>
+        <li class="navbar-item"><a href="#blogs" class="navbar-link"><span class="navbar-dot"></span><span class="navbar-label">Blog</span></a></li>
+        <li class="navbar-item"><a href="#contact" class="navbar-link"><span class="navbar-dot"></span><span class="navbar-label">Contact</span></a></li>
       </ul>
+      <span class="menubar-clock"><span>🔋</span><span id="menubar-time">9:41 AM</span></span>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <img src="images/lzr2.png" alt="Laazer" class="hero-avatar">
-    <div class="glass section-content">
-      <h1>Laazer</h1>
-      <p>Lead Software Engineer & Full Stack Code Alchemist</p>
-      <div class="hero-actions">
-        <button type="button" class="experience-pagination-btn hero-resume-btn" id="hero-resume-btn" aria-label="Open résumé">Résumé</button>
-      </div>
-    </div>
-  </section>
+  <!-- Desktop dock -->
+  <div class="dock" aria-hidden="true">
+    <a href="#experience" class="dock-item"><span class="dock-icon i-work">📁</span><span class="dock-label">work</span></a>
+    <a href="#projects" class="dock-item"><span class="dock-icon i-blob">🧪</span><span class="dock-label">blobert</span></a>
+    <a href="#" class="dock-item"><span class="dock-icon i-term">▮</span><span class="dock-label">term</span></a>
+    <a href="#contact" class="dock-item"><span class="dock-icon i-trash">✉</span><span class="dock-label">contact</span></a>
+  </div>
 
-  <!-- About Section -->
-  <section class="section" id="about">
-    <div class="glass section-content">
-      <h2>About Me</h2>
-      <p>I'm a software developer passionate about building clean, efficient, and user-friendly applications. I enjoy working with modern web technologies and creating tools that solve real problems.</p>
-    </div>
-  </section>
+  <div class="site">
 
-  <!-- Experience Section -->
-  <section class="section" id="experience">
-    <div class="glass section-content">
-      <h2>Experience</h2>
-      <div id="experience-root">
-        <p class="experience-loading">Loading…</p>
+    <!-- Hero — welcome terminal -->
+    <section class="hero">
+      <div class="win">
+        <div class="win-bar">
+          <span class="light r"></span><span class="light y"></span><span class="light g"></span>
+          <span class="win-title t-purple">— jacob@brandt: ~ —</span>
+          <span class="win-hint">whoami</span>
+        </div>
+        <div class="win-body">
+          <div class="hero-prompt"><span class="a">➜</span> <span class="t">~</span> <span class="c">whoami</span></div>
+          <div class="hero-row">
+            <img src="images/lzr2.png" alt="Laazer" class="hero-avatar">
+            <div class="section-content">
+              <h1 class="hero-name">Laazer</h1>
+              <p class="hero-role">Lead Software Engineer <span class="amp">&amp;</span> <span class="alc">Full Stack Code Alchemist</span><span class="cursor"></span></p>
+              <div class="hero-actions">
+                <a href="#about" class="chip">./about</a>
+                <a href="#experience" class="chip c-lilac">./experience</a>
+                <a href="#projects" class="chip c-green">./projects</a>
+                <a href="#contact" class="chip c-pink">./contact</a>
+                <button type="button" class="experience-pagination-btn hero-resume-btn" id="hero-resume-btn" aria-label="Open résumé">↧ resume.pdf</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Projects Section -->
-  <section class="section" id="projects">
-    <div class="glass section-content">
-      <h2>Projects</h2>
-      <div id="projects-root">
-        <p class="projects-loading">Loading…</p>
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="win">
+        <div class="win-bar">
+          <span class="light r"></span><span class="light y"></span><span class="light g"></span>
+          <span class="win-title t-teal">about.md</span>
+        </div>
+        <div class="win-body">
+          <h2>cat about.md</h2>
+          <p>I'm a software developer passionate about building clean, efficient, and user-friendly applications. I enjoy working with modern web technologies and creating tools that solve real problems.</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Blogs Section -->
-  <section class="section" id="blogs">
-    <div class="glass section-content">
-      <div class="section-title-row">
-        <h2>Blog Posts</h2>
-        <a href="series.html" class="section-series-link">Browse by Series →</a>
+    <!-- Experience -->
+    <section class="section" id="experience">
+      <div class="win">
+        <div class="win-bar">
+          <span class="light r"></span><span class="light y"></span><span class="light g"></span>
+          <span class="win-title t-blue">experience.log</span>
+          <span class="win-hint">tail -f</span>
+        </div>
+        <div class="win-body">
+          <h2>tail -f experience.log</h2>
+          <div id="experience-root">
+            <p class="experience-loading">Loading…</p>
+          </div>
+        </div>
       </div>
-      <div id="blogs-root">
-        <p class="blogs-loading">Loading…</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Contact Section -->
-  <section class="section" id="contact">
-    <div class="glass section-content">
-      <h2>Contact</h2>
-      <div class="contact-info">
-        <p>Feel free to reach out via LinkedIn.</p>
-        <a href="https://www.linkedin.com/in/brandtjacob/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <!-- Projects -->
+    <section class="section" id="projects">
+      <div class="win">
+        <div class="win-bar">
+          <span class="light r"></span><span class="light y"></span><span class="light g"></span>
+          <span class="win-title t-yellow">projects/</span>
+          <span class="win-hint">ls -la</span>
+        </div>
+        <div class="win-body">
+          <h2>ls projects/</h2>
+          <div id="projects-root">
+            <p class="projects-loading">Loading…</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
+    <!-- Blogs -->
+    <section class="section" id="blogs">
+      <div class="win">
+        <div class="win-bar">
+          <span class="light r"></span><span class="light y"></span><span class="light g"></span>
+          <span class="win-title t-pink">blog.log</span>
+          <span class="win-hint">tail -f</span>
+        </div>
+        <div class="win-body">
+          <div class="section-title-row">
+            <h2>cat blog/*.md</h2>
+            <a href="series.html" class="section-series-link">Browse by Series →</a>
+          </div>
+          <div id="blogs-root">
+            <p class="blogs-loading">Loading…</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="win">
+        <div class="win-bar">
+          <span class="light r"></span><span class="light y"></span><span class="light g"></span>
+          <span class="win-title t-cyan">mail jacob</span>
+        </div>
+        <div class="win-body">
+          <h2>mail jacob</h2>
+          <div class="contact-info">
+            <p>Feel free to reach out via LinkedIn.</p>
+            <a href="https://www.linkedin.com/in/brandtjacob/" target="_blank" rel="noopener noreferrer">linkedin.com/in/brandtjacob</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer / status bar -->
   <footer>
     <p>&copy; 2024 Laazer. All rights reserved.</p>
     <div class="footer-links">
@@ -146,7 +183,6 @@
             <path d="M 88,20 L 108,31 L 88,31 L 71,36 L 56,45 L 43,58 L 34,73 L 30,85 L 28,98 L 29,115 L 34,130 L 35,118 L 45,142 L 65,161 L 88,170 L 112,170 L 121,167 L 111,167 L 108,164 L 115,164 L 129,159 L 145,144 L 142,145 L 141,143 L 148,131 L 151,113 L 149,117 L 148,103 L 144,91 L 146,111 L 143,122 L 137,132 L 118,147 L 108,150 L 94,150 L 83,147 L 73,141 L 60,126 L 55,111 L 55,98 L 60,83 L 73,68 L 95,59 L 113,61 L 115,58 L 117,63 L 130,69 L 135,76 L 134,79 L 142,88 L 152,92 L 159,85 L 162,76 L 158,71 L 156,59 L 152,59 L 156,52 L 136,33 L 121,25 L 108,22 L 119,27 L 129,35 L 121,35 L 106,25 Z"/>
           </g>
         </svg>
-        <!-- <img src="images/moxfield.png" width="20" height="20" alt="Moxfield" > -->
         Moxfield
       </a>
     </div>
@@ -162,6 +198,19 @@
         btn.addEventListener('click', function () {
           window.location.href = 'resume.html?v=14';
         });
+      }
+      // Live menu-bar clock (BrandtOS chrome).
+      var timeEl = document.getElementById('menubar-time');
+      if (timeEl) {
+        var tick = function () {
+          var d = new Date();
+          var h = d.getHours(), m = d.getMinutes();
+          var ampm = h >= 12 ? 'PM' : 'AM';
+          h = h % 12; if (h === 0) h = 12;
+          timeEl.textContent = h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
+        };
+        tick();
+        setInterval(tick, 15000);
       }
     })();
   </script>

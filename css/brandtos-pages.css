@@ -1,0 +1,245 @@
+/* ============================================================
+   BrandtOS theme — blog post + series pages
+   Loaded AFTER glass.css + blog.css / series.css AND after
+   brandtos.css (which supplies :root tokens and the shared
+   chrome: .navbar, .dock, .win, .win-bar, .light, .t-*).
+   This file converts the .glass panels into terminal windows
+   and themes the blog / series specific components.
+   ============================================================ */
+
+/* kill the glass blur + the blue glow overlay from blog.css/glass.css */
+.glass { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+body::before { display: none !important; }
+
+body { padding-left: 0; padding-right: 0; }
+
+/* ---------------------------------------------------------- shared shells */
+.blog-shell,
+.series-shell {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 24px 60px;
+}
+
+/* keep anchor jumps clear of the fixed menu bar */
+#top,
+.series-card { scroll-margin-top: 60px; }
+
+/* back links -> terminal chip */
+.blog-nav,
+.series-nav {
+  padding: 0;
+  margin: 0 0 22px;
+}
+.blog-back-link,
+.series-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 0;
+  border: 1px solid #2b3958;
+  background: #111a2e;
+  color: var(--cyan);
+  font-size: 12.5px;
+  text-decoration: none;
+  transition: filter .15s, transform .12s;
+}
+.blog-back-link:hover,
+.series-back-link:hover { filter: brightness(1.3); transform: translateY(-1px); color: var(--cyan); }
+
+/* ---------------------------------------------------------- panels -> windows */
+.blog-header.glass,
+.blog-content.glass,
+.blog-bottom-nav,
+.series-page-header.glass {
+  padding: 0;
+  margin-bottom: 24px;
+}
+/* .win (added in markup) supplies the terminal frame; .win-body supplies padding + bg */
+
+/* ---------------------------------------------------------- BLOG HEADER */
+.blog-header .win-body { padding: 26px 30px 24px; }
+.blog-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 0;
+  font-size: 11px;
+  background: #111a2e;
+  border: 1px solid #2b3958;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+.blog-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--fg-far);
+  margin-bottom: 8px;
+}
+.blog-title-main {
+  font-family: 'VT323', monospace;
+  font-size: clamp(40px, 7vw, 62px);
+  line-height: .95;
+  margin: 6px 0 0;
+  background: linear-gradient(92deg, var(--cyan) 0%, var(--cyan) 48%, var(--pink) 58%, var(--pink) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: 0 0 26px rgba(127,224,255,.16);
+}
+
+/* ---------------------------------------------------------- BLOG ARTICLE */
+.blog-content .win-body { padding: 30px 32px 34px; }
+.blog-body { color: var(--fg); }
+.blog-body h1, .blog-body h2, .blog-body h3, .blog-body h4 {
+  font-family: 'Space Grotesk', 'IBM Plex Mono', monospace;
+  color: #eaf1ff;
+}
+.blog-body h2 { color: var(--cyan); }
+.blog-body h3 { color: var(--green); }
+.blog-body a { color: var(--yellow); }
+.blog-body a:hover { color: #f4cd6a; }
+.blog-body blockquote { border-left-color: var(--purple); color: var(--fg-dim); }
+.blog-body :not(pre) > code { background: #111a2e; border: 1px solid #22304d; color: var(--cyan); }
+
+/* ---------------------------------------------------------- BLOG BOTTOM NAV */
+.blog-bottom-nav .win-body { padding: 20px 22px; }
+.blog-bottom-nav { margin-top: 8px; }
+.blog-bottom-back { margin-top: 14px; }
+.blog-bottom-series {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(127,224,255,.14);
+}
+.blog-bottom-series-label { color: var(--fg-mut); font-size: 12px; }
+.blog-bottom-link {
+  border-radius: 0;
+  border: 1px solid #2b3958;
+  background: #111a2e;
+  color: var(--cyan);
+  transition: filter .15s, transform .12s;
+}
+.blog-bottom-link:hover { border-color: #3a5a8a; background: #142138; filter: brightness(1.2); transform: translateY(-1px); }
+.blog-bottom-link.disabled { opacity: .38; }
+
+/* mermaid controls -> square terminal buttons */
+.blog-mermaid { border-color: #22304d; background: rgba(11,14,23,.6); border-radius: 6px; }
+.blog-mermaid-btn { border-radius: 0; background: #111a2e; border-color: #2b3958; color: var(--cyan); }
+.blog-mermaid-btn:hover { border-color: #3a5a8a; background: #142138; }
+.blog-mermaid-viewport { border-radius: 4px; }
+
+/* ---------------------------------------------------------- SERIES PAGE */
+.series-page-header .win-body { padding: 24px 30px; }
+.series-page-title {
+  font-family: 'VT323', monospace;
+  font-size: clamp(42px, 8vw, 64px);
+  line-height: .95;
+  margin: 0;
+  background: linear-gradient(92deg, var(--cyan) 0%, var(--cyan) 48%, var(--pink) 58%, var(--pink) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.series-loading, .series-empty, .series-error { color: var(--fg-mut); font-size: 13px; }
+
+/* series accordion cards -> terminal windows with a faux title bar */
+.series-card.glass {
+  background: var(--term);
+  border: 2px solid var(--ink);
+  border-radius: 9px;
+  box-shadow: 7px 7px 0 rgba(28,26,46,.5);
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+/* faux traffic-light title bar (no markup change needed) */
+.series-card.glass::before {
+  content: "";
+  display: block;
+  height: 32px;
+  background:
+    radial-gradient(circle 5.5px at 16px 16px, #ff5f56 96%, transparent 100%),
+    radial-gradient(circle 5.5px at 34px 16px, #ffbd2e 96%, transparent 100%),
+    radial-gradient(circle 5.5px at 52px 16px, #27c93f 96%, transparent 100%),
+    linear-gradient(var(--term-bar1), var(--term-bar2));
+  border-bottom: 1px solid var(--term-edge);
+}
+.series-card-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 22px;
+  background: radial-gradient(130% 90% at 15% 0%, #101528 0%, #0b0e17 65%);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: var(--fg);
+}
+.series-card-title-row { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.series-card-name { font-size: 16px; font-weight: 700; color: var(--cyan); }
+.series-post-count { font-size: 12px; color: var(--fg-far); }
+.series-chevron { color: var(--fg-mut); transition: transform .2s; flex-shrink: 0; }
+.series-card.open .series-chevron { transform: rotate(180deg); }
+
+.series-posts-list {
+  display: none;
+  padding: 4px 16px 16px;
+  background: radial-gradient(130% 90% at 15% 0%, #101528 0%, #0b0e17 65%);
+}
+.series-card.open .series-posts-list { display: block; }
+
+.series-post-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  text-decoration: none;
+  color: var(--fg);
+  border: 1px solid #1e2438;
+  border-left: 2px solid #2b3958;
+  background: #0d1322;
+  margin-bottom: 8px;
+  transition: border-color .15s, background .15s, transform .12s;
+}
+.series-post-item:hover {
+  border-left-color: var(--cyan);
+  background: #111a2e;
+  transform: translateX(2px);
+  color: var(--fg);
+}
+.series-post-num {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  color: #0b0e17;
+  background: var(--cyan);
+  font-weight: 700;
+}
+.series-post-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+.series-post-title { font-size: 14px; color: #dfeaff; }
+.series-post-meta { display: flex; gap: 10px; align-items: center; }
+.series-post-date { font-size: 11.5px; color: var(--fg-far); }
+.series-post-type-badge {
+  font-size: 10.5px;
+  color: var(--yellow);
+  border: 1px solid #4a4327;
+  padding: 1px 7px;
+}
+.series-post-arrow { color: var(--fg-mut); flex-shrink: 0; }
+.series-post-item:hover .series-post-arrow { color: var(--cyan); }
+
+/* ---------------------------------------------------------- responsive */
+@media (max-width: 760px) {
+  .blog-shell, .series-shell { padding: 18px 14px 48px; }
+  .blog-header .win-body,
+  .blog-content .win-body { padding: 20px 18px; }
+  .blog-body { max-width: none; }
+}
