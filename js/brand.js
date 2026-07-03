@@ -19,5 +19,15 @@
     linkedInLinks.forEach(function (link) {
       link.style.display = 'none';
     });
+
+    // Hide the Contact section entirely (it only exposes the personal
+    // LinkedIn), along with its nav link and dock shortcut.
+    var contactSection = document.getElementById('contact');
+    if (contactSection) contactSection.style.display = 'none';
+
+    document.querySelectorAll('a[href="#contact"], a[href$="#contact"]').forEach(function (link) {
+      var item = link.closest('.navbar-item') || link.closest('.dock-item') || link;
+      item.style.display = 'none';
+    });
   }
 })();
