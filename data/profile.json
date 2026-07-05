@@ -121,9 +121,9 @@
       "type": "local"
     },
     {
-      "title": "⚡ LLM-Charge",
-      "description": "TypeScript platform for hybrid local/cloud LLM routing, cost tracking, workflows, and automation—supercharge Ollama and friends while cutting API spend.",
-      "url": "https://github.com/laazer/lllm-charge",
+      "title": "🌱 LoreGarden",
+      "description": "A local agent SDLC IDE built with FastAPI, React, and Python—orchestrating multi-agent development workflows through configurable TDD pipelines and ticket management.",
+      "url": "https://github.com/laazer/loregarden",
       "type": "external"
     },
     {
