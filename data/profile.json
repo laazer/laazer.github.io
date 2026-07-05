@@ -117,8 +117,8 @@
     {
       "title": "🧪 Blobert: Lab Escape Slime",
       "description": "A cozy 2.5D experimental platformer about mutation, physical experimentation, and elastic game feel.",
-      "url": "https://github.com/laazer/blobert",
-      "type": "external"
+      "url": "blog.html?post=data%2Fblog%2FBlobert%2Fblog_post_9_bittersweet_update.md&v=6",
+      "type": "local"
     },
     {
       "title": "⚡ LLM-Charge",
@@ -208,6 +208,13 @@
       "series": "blobert-devlogs",
       "url": "data/blog/Blobert/blog_post_8_generating_enemies_pt3.md",
       "date": "2026/06/05"
+    },
+    {
+      "title": "Blobert Devlog #9: Bittersweet Update",
+      "type": "local",
+      "series": "blobert-devlogs",
+      "url": "data/blog/Blobert/blog_post_9_bittersweet_update.md",
+      "date": "2026/07/03"
     }
   ]
 }
