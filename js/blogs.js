@@ -59,6 +59,28 @@
     return 'Read this article for more insights.';
   }
 
+  /**
+   * Flatten inline markdown to plain text for card previews: images are dropped,
+   * links keep only their label, and emphasis/code markers are removed so raw
+   * syntax (e.g. "[more here](./blog.html?...)") never leaks into the card.
+   */
+  function stripInlineMarkdown(line) {
+    var text = String(line);
+    text = text.replace(/!\[[^\]]*\]\([^)]*\)/g, '');
+    text = text.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1');
+    text = text.replace(/\[([^\]]*)\]\[[^\]]*\]/g, '$1');
+    text = text.replace(/<[^>]+>/g, '');
+    text = text.replace(/`+([^`]*)`+/g, '$1');
+    text = text.replace(/(\*\*|__)(.*?)\1/g, '$2');
+    text = text.replace(/(\*|_)(?=\S)(.*?\S)\1/g, '$2');
+    text = text.replace(/^\s*>+\s?/, '');
+    return text.replace(/\s+/g, ' ').trim();
+  }
+
+  function truncate(text, max) {
+    return text.length > max ? text.substring(0, max) + '...' : text;
+  }
+
   function fetchPreview(blog) {
     if (blog.preview) {
       return Promise.resolve(blog.preview);
@@ -74,10 +96,19 @@
           return res.ok ? res.text() : Promise.reject('Failed to load');
         })
         .then(function (content) {
-          var preview = content.split('\n').find(function (line) {
-            return (line.trim().length > 20 && !line.startsWith('#') && !line.startsWith('!') && !line.startsWith('<img') && !line.startsWith('['));
-          }) || 'Read this blog post.';
-          previewCache[blog.url] = preview.substring(0, 300) + '...';
+          var preview = '';
+          var lines = content.split('\n');
+          for (var i = 0; i < lines.length; i++) {
+            var raw = lines[i].trim();
+            /* Skip headings, thematic breaks/frontmatter fences, and code fences. */
+            if (!raw || raw.charAt(0) === '#' || /^(-{3,}|={3,}|`{3,}|~{3,})$/.test(raw)) continue;
+            var text = stripInlineMarkdown(raw);
+            if (text.length > 20) {
+              preview = text;
+              break;
+            }
+          }
+          previewCache[blog.url] = truncate(preview || 'Read this blog post.', 300);
           return previewCache[blog.url];
         })
         .catch(function () {
