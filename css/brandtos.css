@@ -1,5 +1,5 @@
 /* ============================================================
-   BrandtOS — "1d Hybrid" theme
+   loreOS — "1d Hybrid" theme
    Retro-OS desktop backdrop + tiled dark terminal windows.
    Styles the data-driven markup emitted by profile.js /
    projects.js / blogs.js plus the static shell in index.html.
@@ -543,6 +543,202 @@ footer > p { margin: 0; font-size: 12px; color: #4a4763; }
 }
 .footer-links a:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 rgba(28,26,46,.45); }
 .footer-links svg { width: 18px; height: 18px; }
+
+/* ---------------------------------------------------------- WINDOW CONTROLS (terminal.js) */
+.light--btn {
+  position: relative;
+  cursor: pointer;
+  transition: filter .12s, transform .12s;
+}
+.light--btn::after {            /* bigger hit target than the 11px dot */
+  content: "";
+  position: absolute;
+  inset: -6px -3px;
+}
+.light--btn:hover { filter: brightness(1.15); transform: scale(1.12); }
+.light--btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.win-bar:has(.light--btn) { user-select: none; }
+
+.win--min .win-body { display: none; }
+.win--min .win-bar { border-bottom: 0; }
+.win--closed { display: none; }
+
+.win-stub[hidden] { display: none; }
+.win-stub-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  padding: 10px 14px;
+  background: rgba(251,250,246,.55);
+  color: var(--ink);
+  border: 2px dashed rgba(28,26,46,.45);
+  border-radius: 9px;
+}
+.win-stub-btn:hover { background: rgba(251,250,246,.85); }
+.win-stub-name { font-weight: 700; }
+.win-stub-hint { color: #4a4763; }
+
+.win--max {
+  position: fixed;
+  top: 58px; left: 16px; right: 16px; bottom: 16px;
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 0 100vmax rgba(28,26,46,.45), var(--shadow);
+}
+.win--max .win-body { flex: 1; overflow: auto; }
+.win--max .term-output { max-height: none; }
+html.win-max-open { overflow: hidden; }
+
+/* ---------------------------------------------------------- INTERACTIVE SHELL */
+.term {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--term-edge);
+  font-family: 'IBM Plex Mono', 'Space Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.term-output {
+  max-height: 280px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--term-edge) transparent;
+}
+.term-out { white-space: pre-wrap; word-break: break-word; color: var(--fg); }
+.term-pre { white-space: pre; overflow-x: auto; }
+.term-echo .a, .term-prompt .a { color: var(--teal); }
+.term-echo .t, .term-prompt .t { color: var(--green); }
+.term-echo .c { color: var(--yellow); }
+.term-dim  { color: var(--fg-mut); }
+.term-err  { color: var(--pink); }
+.tk-cmd  { color: var(--yellow); }
+.tk-dir  { color: var(--sky); font-weight: 700; }
+.tk-file { color: var(--fg); }
+.tk-name { color: var(--cyan); font-weight: 700; }
+.tk-role { color: var(--lilac); }
+.tk-art  { color: var(--purple); }
+.term-out a { color: var(--cyan); text-decoration: none; border-bottom: 1px dashed #2b3958; }
+.term-out a:hover { color: #a9e6ff; }
+
+.term-line {
+  display: flex;
+  align-items: center;
+  margin: 2px 0 0;
+}
+.term-prompt { white-space: pre; cursor: text; }
+.term-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  color: var(--yellow);
+  font: inherit;
+  caret-color: var(--cyan);
+}
+
+@media (max-width: 760px) {
+  .term-input { font-size: 16px; }   /* stop iOS zooming on focus */
+  .term-output { max-height: 220px; }
+  .win--max { top: 52px; left: 8px; right: 8px; bottom: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light--btn, .light--btn:hover { transition: none; transform: none; }
+}
+
+/* ---------------------------------------------------------- ARCADE (games.js) */
+html.game-open { overflow: hidden; }
+.game-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(28,26,46,.55);
+}
+.game-win { width: min(680px, 100%); max-height: 100%; display: flex; flex-direction: column; }
+.game-win .light { border: 0; padding: 0; }
+.t-green { color: var(--green); }
+.game-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 0;
+}
+.game-canvas {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 170px);
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  image-rendering: pixelated;
+  border: 2px solid var(--term-edge);
+  background: var(--term);
+  touch-action: none;
+  outline: none;
+}
+.game-canvas:focus-visible { border-color: var(--cyan); }
+.game-status { font-size: 13px; color: var(--yellow); white-space: pre; }
+.game-help { font-size: 11px; color: var(--fg-mut); text-align: center; }
+
+/* ---------------------------------------------------------- CHEAT CODE / CRT MODE */
+.term-cheat { color: var(--yellow); text-shadow: 0 0 8px rgba(227,179,65,.6); }
+.lore-toast {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  font-family: 'Silkscreen', monospace;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 rgba(28,26,46,.5);
+  padding: 8px 14px;
+  white-space: nowrap;
+  animation: toast-in .25s steps(4) both;
+}
+@keyframes toast-in { from { transform: translate(-50%, -12px); opacity: 0; } }
+
+html.crt body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.16) 2px 3px),
+    radial-gradient(ellipse at center, rgba(0,0,0,0) 60%, rgba(0,0,0,.35) 100%);
+}
+html.crt .win { box-shadow: var(--shadow), 0 0 28px rgba(126,231,135,.22); }
+html.crt .win-body { text-shadow: 0 0 6px rgba(127,224,255,.35); }
+html.crt-boot body { animation: crt-boot 1.1s steps(12) both; }
+@keyframes crt-boot {
+  0%   { filter: brightness(3) saturate(0); transform: scaleY(.02); }
+  30%  { filter: brightness(2) saturate(.3); transform: scaleY(1); }
+  45%  { filter: brightness(.6) hue-rotate(40deg); }
+  60%  { filter: brightness(1.4) hue-rotate(-30deg); }
+  100% { filter: none; transform: none; }
+}
+
+@media (max-width: 760px) {
+  .game-body { padding: 12px; }
+  .game-help { display: none; }
+}
 
 /* ---------------------------------------------------------- RESPONSIVE */
 @media (max-width: 1180px) { .dock { display: none; } }
